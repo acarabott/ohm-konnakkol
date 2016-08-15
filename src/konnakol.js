@@ -1,28 +1,28 @@
-var grammar = ohm.grammarFromScriptElement();
+const grammar = ohm.grammarFromScriptElement();
 
-var examples = [
+const examples = [
   'ta', 'taka', 'takadimi', 'dadiginadom', 'Takadimi', 'da,di,gi,nakadom,'
 ];
 
-examples.forEach(function(example) {
+examples.forEach(example => {
   console.log(example, grammar.match(example).succeeded());
 });
 
 
-var semantics = grammar.createSemantics();
+const semantics = grammar.createSemantics();
 
 function createSyllable (consonant, vowel, extensions, stress) {
   return {
+    stress,
     syllable: consonant.sourceString + vowel.sourceString,
-    duration: 1 + extensions.interpret().length,
-    stress: stress
+    duration: 1 + extensions.interpret().length
   };
 }
 
 function createPhrase (words) {
   return {
-    words: words,
-    play: function() {
+    words,
+    play () {
       console.log(words);
       return words;
     }
@@ -30,27 +30,27 @@ function createPhrase (words) {
 }
 
 semantics.addOperation('interpret', {
-  Phrase: function(words) {
+  Phrase (words) {
     return createPhrase(words.interpret());
   },
-  word: function(syllables) {
+  word (syllables) {
     return syllables.interpret();
   },
-  syllable_simple: function(consonant, vowel, extensions) {
+  syllable_simple (consonant, vowel, extensions) {
     return createSyllable(consonant, vowel, extensions, false);
   },
-  syllable_stressed: function(consonant, vowel, extensions) {
+  syllable_stressed (consonant, vowel, extensions) {
     return createSyllable(consonant, vowel, extensions, true);
   },
-  extension_extend: function(exp) {
+  extension_extend (exp) {
     return exp.interpret();
   },
-  extension_rest: function(exp) {
+  extension_rest (exp) {
     return exp.interpret();
   }
 });
 
-var result = grammar.match('ta');
-var node = semantics(result);
-var phrase = node.interpret();
+const result = grammar.match('ta');
+const node = semantics(result);
+const phrase = node.interpret();
 console.log(phrase.play());
