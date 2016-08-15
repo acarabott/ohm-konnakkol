@@ -1,0 +1,23 @@
+{
+  "name": "konnakol",
+  "version": "0.0.1",
+  "description": "konnakol parsing in ohm",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/acarabott/ohm-konnakol.git"
+  },
+  "keywords": [
+    "ohm",
+    "konnakol"
+  ],
+  "author": "Arthur Carabott",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/acarabott/ohm-konnakol/issues"
+  },
+  "homepage": "https://github.com/acarabott/ohm-konnakol#readme"
+}
