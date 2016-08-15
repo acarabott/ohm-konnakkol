@@ -1,0 +1,28 @@
+Konnakol {
+  Phrase = word+
+
+  word = syllable+
+
+  syllable = consonant vowel extension* --simple
+         | upperConsonant vowel extension* --stressed
+
+    extension =
+        "," --extend
+      | "-" --rest
+
+    consonant = &("a".."z") ~vowel letter "h"? // is h the only case? ("h"|"r"|"l"|"y"|"w")?
+
+    upperConsonant = &("A".."Z") ~upperVowel letter "h"?
+
+    modVowel = consonant+ ~vowel
+
+    vowel = vowel modVowel --mod
+    | "a"        --a
+    | "e"        --e
+    | "i"        --i
+        | "o"        --o
+        | "u"        --u
+
+    // upperVowel is *not* used by the semantics, only for negating in upperConsonant
+    upperVowel = ("A"|"E"|"I"|"O"|"U")
+}
