@@ -26,15 +26,3 @@ Konnakol {
     // upperVowel is *not* used by the semantics, only for negating in upperConsonant
     upperVowel = ("A"|"E"|"I"|"O"|"U")
 }
-
-/*
-  TODO
-
-  - extensions/rests
-    - get input from nagaraj
-    - starting phrase with a rest
-  - gati
-  - lower speed _ / higher speed ^ * ' `
-
-
-*/
