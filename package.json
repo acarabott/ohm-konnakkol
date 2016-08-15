@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/acarabott/ohm-konnakol/issues"
   },
-  "homepage": "https://github.com/acarabott/ohm-konnakol#readme"
+  "homepage": "https://github.com/acarabott/ohm-konnakol#readme",
+  "devDependencies": {
+    "ohm-js": "git+https://github.com/cdglabs/ohm.git"
+  }
 }
