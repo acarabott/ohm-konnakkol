@@ -1,0 +1,27 @@
+{
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  },
+  "rules": {
+    "prefer-const": 1,
+    "prefer-arrow-callback": 1,
+    "no-var": 2,
+    "prefer-spread": 2,
+    "prefer-template": 2,
+    "eqeqeq": 2,
+    "curly": 2,
+    "no-else-return": 2,
+    "no-loop-func": 1,
+    "no-multi-str": 2,
+    "no-native-reassign": 2,
+    "no-new-func": 2,
+    "no-use-before-define": 2,
+    "semi": ["error", "always"],
+    "no-extra-semi": 2
+  }
+}
