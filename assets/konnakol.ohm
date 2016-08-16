@@ -3,7 +3,7 @@ Konnakol {
 
   word = syllable+
 
-  syllable = consonant vowel extension* --simple
+  syllable = consonant vowel extension* --normal
          | upperConsonant vowel extension* --stressed
 
     extension =

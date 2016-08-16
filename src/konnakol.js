@@ -1,8 +1,8 @@
 const grammar = ohm.grammarFromScriptElement();
+const semantics = grammar.createSemantics();
 
-const soundLibraryFactory = (_lookup) => {
+const createSoundLibrary = (_lookup) => {
   const lookup = _lookup;
-
   if (!lookup.hasOwnProperty('default')) {
     throw Error('sound library needs to have default sounds set');
   }
@@ -30,22 +30,40 @@ const soundLibraryFactory = (_lookup) => {
   }
 };
 
-function createSyllable (consonant, vowel, extensions, stress) {
-  return {
-    stress,
-    syllable: consonant.sourceString + vowel.sourceString,
-    duration: 1 + extensions.interpret().length
-  };
-}
-
 function createPhrase (words) {
   return {
     words,
-    play () {
-      console.log(words);
-      return words;
+    play (soundLibrary, when=0) {
+      words.forEach(word => word.play(soundLibrary, when));
     }
   }
+}
+
+function createWord (syllables) {
+  return {
+    syllables,
+    play (soundLibrary, when=0) {
+      let syllableWhen = when;
+      syllables.forEach((syllable, i) => {
+        syllable.play(soundLibrary, syllableWhen);
+        syllableWhen += syllable.duration;
+      });
+    }
+  }
+}
+
+function createSyllable (consonant, vowel, extensions, type) {
+  const that = {
+    type,
+    syllable: consonant.sourceString + vowel.sourceString,
+    duration: 1 + extensions.interpret().length,
+    play (soundLibrary, when=0) {
+      const buffer = soundLibrary.get(that.syllable, that.type);
+      playSample(buffer, when);
+    }
+  };
+
+  return that;
 }
 
 semantics.addOperation('interpret', {
@@ -53,13 +71,13 @@ semantics.addOperation('interpret', {
     return createPhrase(words.interpret());
   },
   word (syllables) {
-    return syllables.interpret();
+    return createWord(syllables.interpret());
   },
-  syllable_simple (consonant, vowel, extensions) {
-    return createSyllable(consonant, vowel, extensions, false);
+  syllable_normal (consonant, vowel, extensions) {
+    return createSyllable(consonant, vowel, extensions, 'normal');
   },
   syllable_stressed (consonant, vowel, extensions) {
-    return createSyllable(consonant, vowel, extensions, true);
+    return createSyllable(consonant, vowel, extensions, 'stress');
   },
   extension_extend (exp) {
     return exp.interpret();
@@ -73,17 +91,16 @@ const examples = [
   'ta', 'taka', 'takadimi', 'dadiginadom', 'Takadimi', 'da,di,gi,nakadom,'
 ];
 
-examples.forEach(example => {
-  console.log(example, grammar.match(example).succeeded());
-});
+// examples.forEach(example => {
+//   console.log(example, grammar.match(example).succeeded());
+// });
 
 function main (soundLibrary) {
   const result = grammar.match('takadimi takajuna');
   const node = semantics(result);
   const phrase = node.interpret();
 
-  console.log("soundLibrary.get('default', 'normal'):", soundLibrary.get('default', 'normal'));
-  phrase.play();
+  phrase.play(soundLibrary);
 }
 
 function setup() {
@@ -97,7 +114,7 @@ function setup() {
   });
 
   Promise.all(soundFilePromises).then(() => {
-    main(soundLibraryFactory(soundLibraryLookup));
+    main(createSoundLibrary(soundLibraryLookup));
   });
 }
 
