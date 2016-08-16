@@ -19,13 +19,10 @@ function loadResource (url, responseType="") {
   });
 }
 
-function loadAudio(...urls) {
-  return Promise.all(urls.map(url => {
-    return loadResource(url, 'arraybuffer').then(buffer => {
-      return audio.decodeAudioData(buffer).then(decodedBuffer => decodedBuffer);
-    })
-    .then(decodedBuffer => decodedBuffer);
-  }));
+function loadAudio(url) {
+  return loadResource(url, 'arraybuffer').then(buffer => {
+    return audio.decodeAudioData(buffer).then(decodedBuffer => decodedBuffer)
+  });
 }
 
 function playSample (buffer, when=0) {
