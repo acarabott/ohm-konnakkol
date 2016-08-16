@@ -19,11 +19,13 @@ function loadResource (url, responseType="") {
   });
 }
 
-function loadAudioResource (url) {
-  return loadResource(url, 'arraybuffer').then(buffer => {
-    return audio.decodeAudioData(buffer).then(decodedBuffer => decodedBuffer);
-  })
-  .then(decodedBuffer => decodedBuffer);
+function loadAudio(...urls) {
+  return Promise.all(urls.map(url => {
+    return loadResource(url, 'arraybuffer').then(buffer => {
+      return audio.decodeAudioData(buffer).then(decodedBuffer => decodedBuffer);
+    })
+    .then(decodedBuffer => decodedBuffer);
+  }));
 }
 
 function playSample (buffer, when=0) {
@@ -32,14 +34,3 @@ function playSample (buffer, when=0) {
   source.connect(audio.destination);
   source.start(when);
 }
-
-const audioPath = 'assets/audio/';
-const audioFiles = ['stress.mp3', 'simple.mp3'];
-
-Promise.all(audioFiles.map(name => loadAudioResource(`${audioPath}${name}`)))
-  .then(buffers => {
-    buffers.forEach((buffer, i) => playSample(buffer, audio.currentTime + (i * 0.25)));
-  }, error => {
-    console.log("couldn't load all audio");
-    console.log(error);
-  });
