@@ -21,7 +21,10 @@ function loadResource (url, responseType="") {
 
 function loadAudio(url) {
   return loadResource(url, 'arraybuffer').then(buffer => {
-    return audio.decodeAudioData(buffer).then(decodedBuffer => decodedBuffer)
+    return audio.decodeAudioData(buffer,
+      decodedBuffer => decodedBuffer,
+      error => error
+    )
   });
 }
 
