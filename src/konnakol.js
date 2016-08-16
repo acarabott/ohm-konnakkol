@@ -47,7 +47,7 @@ function createWord (syllables) {
   return {
     syllables,
     get duration () {
-      return syllables.reduce((prev, cur) => prev + cur.duration);
+      return syllables.reduce((prev, cur) => prev + cur.duration, 0);
     },
     play (soundLibrary, when=0) {
       let syllableWhen = when;
