@@ -94,22 +94,8 @@ semantics.addOperation('interpret', {
   }
 });
 
-const examples = [
-  'ta', 'taka', 'takadimi', 'dadiginadom', 'Takadimi', 'da,di,gi,nakadom,'
-];
 
-// examples.forEach(example => {
-//   console.log(example, grammar.match(example).succeeded());
-// });
-
-function main (soundLibrary) {
-  const result = grammar.match('takadimi takajuna');
-  const node = semantics(result);
-  const phrase = node.interpret();
-
-  phrase.play(soundLibrary);
-}
-
+let defaultSoundLibrary;
 function setup() {
   const audioPath = 'assets/audio/';
   const audioFiles = {'normal': 'normal.mp3', 'stress': 'stress.mp3'};
@@ -121,8 +107,16 @@ function setup() {
   });
 
   Promise.all(soundFilePromises).then(() => {
-    main(createSoundLibrary(soundLibraryLookup));
+    defaultSoundLibrary = createSoundLibrary(soundLibraryLookup);
+    console.log('ready!');
   });
+}
+
+function play (input, soundLibrary=defaultSoundLibrary) {
+  const result = grammar.match(input);
+  const node = semantics(result);
+  const phrase = node.interpret();
+  phrase.play(soundLibrary);
 }
 
 setup();
