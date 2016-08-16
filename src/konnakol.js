@@ -34,7 +34,11 @@ function createPhrase (words) {
   return {
     words,
     play (soundLibrary, when=0) {
-      words.forEach(word => word.play(soundLibrary, when));
+      let wordWhen = when;
+      words.forEach(word => {
+        word.play(soundLibrary, wordWhen);
+        wordWhen += word.duration;
+      });
     }
   }
 }
@@ -42,9 +46,12 @@ function createPhrase (words) {
 function createWord (syllables) {
   return {
     syllables,
+    get duration () {
+      return syllables.reduce((prev, cur) => prev + cur.duration);
+    },
     play (soundLibrary, when=0) {
       let syllableWhen = when;
-      syllables.forEach((syllable, i) => {
+      syllables.forEach(syllable => {
         syllable.play(soundLibrary, syllableWhen);
         syllableWhen += syllable.duration;
       });
