@@ -29,5 +29,5 @@ function playSample (buffer, when=0) {
   const source = audio.createBufferSource();
   source.buffer = buffer;
   source.connect(audio.destination);
-  source.start(when);
+  source.start(audio.currentTime + when);
 }
