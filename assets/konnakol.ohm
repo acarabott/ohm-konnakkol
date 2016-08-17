@@ -17,8 +17,8 @@ Konnakol {
   word = syllable+
 
   syllable =
-      consonant      vowel extension* --normal
-    | upperConsonant vowel extension* --stressed
+      consonant      vowel? extension* --normal
+    | upperConsonant vowel? extension* --stressed
 
     extension =
         "," --extend
