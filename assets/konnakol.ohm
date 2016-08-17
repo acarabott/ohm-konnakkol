@@ -1,26 +1,23 @@
 Konnakol {
-  // Piece = ModifiedPhrase | Phrase
+  Phrase = Speed+
 
-  // ModifiedPhrase = ModifiedSpeed<Phrase+>
+  Speed = ModifiedSpeed | word
 
-  Phrase = Chunk+
+  ModifiedSpeed = SpeedDouble | SpeedHalf
 
-  Chunk = ModifiedSpeed<Phrase> | word
+  SpeedDouble =
+       "(" SpeedDouble ")" --recur
+     | "(" Phrase ")" -- base
 
-  ModifiedSpeed<T> = SpeedDouble<T> | SpeedHalf<T>
-
-  SpeedDouble<T> =
-      "_" SpeedDouble<T> "_" --recur
-       | "_" T "_" -- base
-
-  SpeedHalf<T> =
-      "^" SpeedHalf<T> "^" --recur
-       | "^" T "^" --base
+  SpeedHalf =
+       "[" SpeedHalf "]" --recur
+     | "[" Phrase "]" --base
 
   word = syllable+
 
-  syllable = consonant vowel extension* --normal
-         | upperConsonant vowel extension* --stressed
+  syllable =
+      consonant      vowel extension* --normal
+    | upperConsonant vowel extension* --stressed
 
     extension =
         "," --extend
