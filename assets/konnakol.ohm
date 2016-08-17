@@ -1,10 +1,23 @@
 Konnakol {
-  Phrase = word+
+  Phrase = Speed+
+
+  Speed = ModifiedSpeed | word
+
+  ModifiedSpeed = SpeedDouble | SpeedHalf
+
+  SpeedDouble =
+       "(" SpeedDouble ")" --recur
+     | "(" Phrase ")" -- base
+
+  SpeedHalf =
+       "[" SpeedHalf "]" --recur
+     | "[" Phrase "]" --base
 
   word = syllable+
 
-  syllable = consonant vowel extension* --normal
-         | upperConsonant vowel extension* --stressed
+  syllable =
+      consonant      vowel extension* --normal
+    | upperConsonant vowel extension* --stressed
 
     extension =
         "," --extend
