@@ -30,7 +30,7 @@ const createSoundLibrary = (_lookup) => {
   }
 };
 
-function createPhrase (words) {
+function createPhrase (words, speed=1) {
   return {
     words,
     play (soundLibrary, when=0) {
@@ -74,11 +74,36 @@ function createSyllable (consonant, vowel, extensions, type) {
 }
 
 semantics.addOperation('interpret', {
-  Phrase (words) {
-    return createPhrase(words.interpret());
+  Speed (expr) {
+    const e = expr.interpret();
+    console.log("e:", e);
+    return e;
   },
-  word (syllables) {
-    return createWord(syllables.interpret());
+  SpeedDouble_recur (start, phrase, end) {
+    const p = phrase.interpret();
+    p.speedCount++;
+    return p.interpret();
+  },
+  SpeedDouble_base (start, phrase, end) {
+    const p = phrase.interpret();
+    p.speedCount = 1;
+    return p;
+  },
+  SpeedHalf_recur (start, phrase, end) {
+    const p = phrase.interpret();
+    p.speedCount++;
+    return p;
+  },
+  SpeedHalf_base (start, phrase, end) {
+    const p = phrase.interpret();
+    p.speedCount = 1;
+    return p;
+  },
+  Phrase (speed) {
+    return createPhrase(speed.interpret());
+  },
+  word (word) {
+    return createWord(word.interpret());
   },
   syllable_normal (consonant, vowel, extensions) {
     return createSyllable(consonant, vowel, extensions, 'normal');
@@ -109,6 +134,13 @@ function setup() {
   Promise.all(soundFilePromises).then(() => {
     defaultSoundLibrary = createSoundLibrary(soundLibraryLookup);
     console.log('ready!');
+
+    play("_takadimi_");
+    // console.log('---------------');
+    // play("^^takadimi^^");
+    // play("^^takadimi^^");
+    // play("^^^^takadimi^^^^");
+    // play("^^takadimi^");
   });
 }
 

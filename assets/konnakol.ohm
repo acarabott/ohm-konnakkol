@@ -1,5 +1,21 @@
 Konnakol {
-  Phrase = word+
+  // Piece = ModifiedPhrase | Phrase
+
+  // ModifiedPhrase = ModifiedSpeed<Phrase+>
+
+  Phrase = Chunk+
+
+  Chunk = ModifiedSpeed<Phrase> | word
+
+  ModifiedSpeed<T> = SpeedDouble<T> | SpeedHalf<T>
+
+  SpeedDouble<T> =
+      "_" SpeedDouble<T> "_" --recur
+       | "_" T "_" -- base
+
+  SpeedHalf<T> =
+      "^" SpeedHalf<T> "^" --recur
+       | "^" T "^" --base
 
   word = syllable+
 
