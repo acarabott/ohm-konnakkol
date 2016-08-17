@@ -5,15 +5,15 @@
 
   "description": "Play Konnakol on the web!",
   "icons": {
-    "16": "assets/images/icon16.png",
-    "48": "assets/images/icon48.png",
-    "128": "assets/images/icon128.png"
+    "16": "images/icon16.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
   },
 
   "browser_action": {
     "default_icon": {
-      "19": "assets/images/icon19.png",
-      "38": "assets/images/icon38.png"
+      "19": "images/icon19.png",
+      "38": "images/icon38.png"
     },
     "deafult_title": "Konnakol",
     "default_popup": "popup.html"
@@ -22,7 +22,7 @@
   "author": "Arthur Carabott",
 
   "background": {
-    "scripts": ["background.js"],
+    "page": "background.html",
     "persistent": false
   },
 
