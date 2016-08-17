@@ -17,9 +17,9 @@ Konnakol {
     modVowel = consonant+ ~vowel
 
     vowel = vowel modVowel --mod
-    | "a"        --a
-    | "e"        --e
-    | "i"        --i
+        | "a"        --a
+        | "e"        --e
+        | "i"        --i
         | "o"        --o
         | "u"        --u
 
