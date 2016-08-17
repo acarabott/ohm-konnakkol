@@ -1,0 +1,37 @@
+{
+  "manifest_version": 2,
+  "name": "Konnakol",
+  "version": "0.0.1",
+
+  "description": "Play Konnakol on the web!",
+  "icons": {
+    "16": "assets/images/icon16.png",
+    "48": "assets/images/icon48.png",
+    "128": "assets/images/icon128.png"
+  },
+
+  "browser_action": {
+    "default_icon": {
+      "19": "assets/images/icon19.png",
+      "38": "assets/images/icon38.png"
+    },
+    "deafult_title": "Konnakol",
+    "default_popup": "popup.html"
+  },
+
+  "author": "Arthur Carabott",
+
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+
+  "homepage_url": "https://github.com/acarabott/ohm-konnakol",
+  "incognito": "split",
+  "minimum_chrome_version": "50",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "unlimitedStorage"
+  ]
+}
