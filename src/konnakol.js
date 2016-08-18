@@ -110,10 +110,10 @@ semantics.addOperation('interpret', {
     return new Syllable(consonant, vowel, extensions, 'stress');
   },
   extension_extend (exp) {
-    return exp.interpret();
+    return exp.sourceString;
   },
   extension_rest (exp) {
-    return exp.interpret();
+    return exp.sourceString;
   }
 });
 
