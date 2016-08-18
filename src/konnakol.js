@@ -31,10 +31,9 @@ const createSoundLibrary = (_lookup) => {
 };
 
 class Chunk {
-  constructor(chunks, speed, isTopLevel=false) {
+  constructor(chunks, speed) {
     this.subchunks = chunks;
     this.speed = speed;
-    this.isTopLevel = isTopLevel;
   }
 
   get duration() {
@@ -42,16 +41,22 @@ class Chunk {
     return sum / this.speed;
   }
 
-  play(soundLibrary, when=0, speedCount) {
+  play(soundLibrary, when=0, speed) {
     let subchunkWhen = when;
     this.subchunks.forEach(subchunk => {
-      const add = this.isTopLevel ? 0 : 1;
-      const pow = Math.pow(2, speedCount);
-      const mul = this.speed * pow;
-      const dur = subchunk.duration * mul;
-      subchunk.play(soundLibrary, subchunkWhen, speedCount + add);
-      subchunkWhen += dur;
+      subchunk.play(soundLibrary, subchunkWhen, speed * this.speed);
+      subchunkWhen += subchunk.duration / speed;
     });
+  }
+}
+
+class Phrase extends Chunk {
+  constructor(chunks) {
+    super(chunks, 1);
+  }
+
+  play(soundLibrary, when) {
+    super.play(soundLibrary, when, 1);
   }
 }
 
@@ -70,7 +75,7 @@ class Syllable {
 
 semantics.addOperation('interpret', {
   Phrase (chunk) {
-    return new Chunk(chunk.interpret(), 1, true);
+    return new Phrase(chunk.interpret());
   },
   ChunkDouble_recur (start, chunk, end) {
     return new Chunk([chunk.interpret()], 2);
@@ -116,7 +121,6 @@ function setup() {
   Promise.all(soundFilePromises).then(() => {
     defaultSoundLibrary = createSoundLibrary(soundLibraryLookup);
     console.log('ready!');
-    play('takadimi');
   });
 }
 
@@ -124,9 +128,7 @@ function play (input, soundLibrary=defaultSoundLibrary, when=0) {
   const result = grammar.match(input);
   const node = semantics(result);
   const phrase = node.interpret();
-
-  // console.log("phrase:", phrase.duration);
-  phrase.play(soundLibrary, when, 0);
+  phrase.play(soundLibrary, when);
 }
 
 setup();
