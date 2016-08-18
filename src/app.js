@@ -40,6 +40,7 @@ function setup() {
 function play (input, when=0, soundLibraryKey='default') {
   const result = konnakol.grammar.match(input);
   if (result.failed()) {
+    console.log(result.message);
     throw Error('Parsing failed, bad input!');
     return;
   }
