@@ -30,86 +30,95 @@ const createSoundLibrary = (_lookup) => {
   }
 };
 
-function createPhrase (words, speed=1) {
-  return {
-    words,
-    play (soundLibrary, when=0) {
-      let wordWhen = when;
-      words.forEach(word => {
-        word.play(soundLibrary, wordWhen);
-        wordWhen += word.duration;
-      });
-    }
+class Phrase {
+  constructor(chunks) {
+    this.chunks = chunks;
+  }
+
+  play (soundLibrary, when=0) {
+    let chunkWhen = when;
+    this.chunks.forEach(chunk => {
+      chunk.play(soundLibrary, chunkWhen, 0);
+      chunkWhen += chunk.duration;
+    });
   }
 }
 
-function createWord (syllables) {
-  return {
-    syllables,
-    get duration () {
-      return syllables.reduce((prev, cur) => prev + cur.duration, 0);
-    },
-    play (soundLibrary, when=0) {
-      let syllableWhen = when;
-      syllables.forEach(syllable => {
-        syllable.play(soundLibrary, syllableWhen);
-        syllableWhen += syllable.duration;
-      });
-    }
+class Word {
+  constructor(syllables) {
+    this.syllables = syllables;
+  }
+
+  get duration() {
+    return this.syllables.reduce((prev, cur) => prev + cur.duration, 0);
+  }
+
+  play (soundLibrary, when=0, speedCount) {
+    let syllableWhen = when;
+    this.syllables.forEach(syllable => {
+      syllable.play(soundLibrary, syllableWhen);
+      syllableWhen += syllable.duration;
+    });
+
+    console.log("speedCount:", speedCount);
   }
 }
 
-function createSyllable (consonant, vowel, extensions, type) {
-  const that = {
-    type,
-    syllable: consonant.sourceString + vowel.sourceString,
-    duration: 1 + extensions.interpret().length,
-    play (soundLibrary, when=0) {
-      const buffer = soundLibrary.get(that.syllable, that.type);
-      playSample(buffer, when);
-    }
-  };
+class Chunk {
+  constructor(chunk) {
+    this.subchunk = chunk;
+    this.speed = 1;
+  }
 
-  return that;
+  get duration() {
+    return this.subchunk.duration / this.speed;
+  }
+
+  play(soundLibrary, when=0, speedCount) {
+    this.subchunk.play(soundLibrary, when, speedCount + 1);
+  }
+}
+
+class Syllable {
+  constructor(consonant, vowel, extensions, type) {
+    this.type = type;
+    this.syllable = consonant.sourceString + vowel.sourceString;
+    this.duration = 1 + extensions.interpret().length;
+  }
+
+  play (soundLibrary, when=0) {
+    const buffer = soundLibrary.get(this.syllable, this.type);
+    playSample(buffer, when);
+  }
 }
 
 semantics.addOperation('interpret', {
-  Speed (expr) {
-    const e = expr.interpret();
-    console.log("e:", e);
-    return e;
+  Phrase (chunk) {
+    return new Phrase(chunk.interpret());
   },
-  SpeedDouble_recur (start, phrase, end) {
-    const p = phrase.interpret();
-    p.speedCount++;
-    return p.interpret();
+  ChunkDouble(word) {
+    return new Chunk(word.interpret());
   },
-  SpeedDouble_base (start, phrase, end) {
-    const p = phrase.interpret();
-    p.speedCount = 1;
-    return p;
+  ChunkDouble_recur (start, phrase, end) {
+    return phrase.interpret();
   },
-  SpeedHalf_recur (start, phrase, end) {
-    const p = phrase.interpret();
-    p.speedCount++;
-    return p;
+  ChunkDouble_base (start, phrase, end) {
+    return phrase.interpret();
   },
-  SpeedHalf_base (start, phrase, end) {
-    const p = phrase.interpret();
-    p.speedCount = 1;
-    return p;
+  ChunkHalf_recur (start, phrase, end) {
+    return phrase.interpret();
   },
-  Phrase (speed) {
-    return createPhrase(speed.interpret());
+  ChunkHalf_base (start, phrase, end) {
+    return phrase.interpret();
   },
-  word (word) {
-    return createWord(word.interpret());
+  word (syllables) {
+    return new Word(syllables.interpret());
   },
   syllable_normal (consonant, vowel, extensions) {
-    return createSyllable(consonant, vowel, extensions, 'normal');
+    return new Syllable(consonant, vowel, extensions, 'normal');
   },
   syllable_stressed (consonant, vowel, extensions) {
-    return createSyllable(consonant, vowel, extensions, 'stress');
+    return new Syllable(consonant, vowel, extensions, 'stress');
   },
   extension_extend (exp) {
     return exp.interpret();
@@ -134,20 +143,29 @@ function setup() {
   Promise.all(soundFilePromises).then(() => {
     defaultSoundLibrary = createSoundLibrary(soundLibraryLookup);
     console.log('ready!');
-
-    play("_takadimi_");
-    // console.log('---------------');
-    // play("^^takadimi^^");
-    // play("^^takadimi^^");
-    // play("^^^^takadimi^^^^");
-    // play("^^takadimi^");
+    ['ta', '(ta)', '((ta))', '(((ta)))', '((((ta))))'].forEach(w => {
+      console.log('----------------------');
+      console.log(w);
+      play(w);
+    });
   });
+}
+
+function printChunks(obj) {
+  console.log(obj);
+  if (obj.hasOwnProperty('chunks')) {
+    obj.chunks.forEach(chunk => printChunks(chunk));
+  }
+  if (obj.hasOwnProperty('chunk')) {
+    printChunks(obj.chunk);
+  }
 }
 
 function play (input, soundLibrary=defaultSoundLibrary) {
   const result = grammar.match(input);
   const node = semantics(result);
   const phrase = node.interpret();
+
   phrase.play(soundLibrary);
 }
 

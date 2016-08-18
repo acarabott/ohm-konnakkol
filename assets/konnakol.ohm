@@ -1,17 +1,18 @@
 Konnakol {
-  Phrase = Speed+
+  Phrase = Chunk+
 
-  Speed = ModifiedSpeed | word
+  Chunk =
+      ChunkDouble
+    | ChunkHalf
+    | word
 
-  ModifiedSpeed = SpeedDouble | SpeedHalf
+  ChunkDouble =
+       "(" ChunkDouble ")" --recur
+     | "(" word ")" -- base
 
-  SpeedDouble =
-       "(" SpeedDouble ")" --recur
-     | "(" Phrase ")" -- base
-
-  SpeedHalf =
-       "[" SpeedHalf "]" --recur
-     | "[" Phrase "]" --base
+  ChunkHalf =
+       "[" ChunkHalf "]" --recur
+     | "[" word "]" --base
 
   word = syllable+
 
