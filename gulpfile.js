@@ -47,8 +47,10 @@ gulp.task('chrome-build', ['babel'], function() {
 gulp.task('chrome-babel',
   babelFactory(['chrome/src/*.js'], 'chrome/extension/scripts'));
 
-gulp.task('chrome-watch', ['chrome-build'], function() {
-  gulp.watch('chrome/src/*.js', ['chrome-babel']);
+gulp.task('chrome-watch', function() {
+  gulp.watch(['src/*.js', 'assets/*.ohm'],
+    ['babel', 'chrome-build', 'chrome-babel']);
+  gulp.watch(['chrome/src/*.js'], ['chrome-build', 'chrome-babel']);
 });
 
 // default
