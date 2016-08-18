@@ -33,8 +33,12 @@ konnakol.createSoundLibrary = (lookup) => {
   }
 };
 
-konnakol.addSoundLibrary = (name, lookup) => {
-  konnakol.soundLibraries[name] = konnakol.createSoundLibrary(lookup);
+konnakol.addSoundLibrary = (name, soundLibrary) => {
+  konnakol.soundLibraries[name] = soundLibrary;
+}
+
+konnakol.addSoundLibraryFromLookup = (name, lookup) => {
+  konnakol.addSoundLibrary(name, konnakol.createSoundLibrary(lookup));
 }
 
 konnakol.Chunk = class Chunk {
