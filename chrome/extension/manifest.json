@@ -15,8 +15,8 @@
       "19": "images/icon19.png",
       "38": "images/icon38.png"
     },
-    "default_title": "Konnakol",
-    "default_popup": "popup.html"
+    "default_title": "Konnakol"
+    // "default_popup": "popup.html"
   },
 
   "author": "Arthur Carabott",
