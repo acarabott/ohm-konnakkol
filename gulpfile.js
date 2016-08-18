@@ -29,7 +29,7 @@ gulp.task('connect', function() {
 });
 
 gulp.task('watchjs', function() {
-  gulp.watch(['src/*.js', 'assets/*.ohm'], ['babel']);
+  gulp.watch(['index.html', 'src/*.js', 'assets/*.ohm'], ['babel']);
 });
 
 // chrome extension
@@ -48,8 +48,9 @@ gulp.task('chrome-babel',
   babelFactory(['chrome/src/*.js'], 'chrome/extension/scripts'));
 
 gulp.task('chrome-watch', ['connect'], function() {
-  gulp.watch(['src/*.js', 'assets/*.ohm'],
+  gulp.watch(['index.html', 'src/*.js', 'assets/*.ohm'],
     ['babel', 'chrome-build', 'chrome-babel']);
+
   gulp.watch(['chrome/src/*.js'], ['chrome-build', 'chrome-babel']);
 });
 
