@@ -31,9 +31,10 @@ const createSoundLibrary = (_lookup) => {
 };
 
 class Chunk {
-  constructor(chunks, speed) {
+  constructor(chunks, speed, isTopLevel=false) {
     this.subchunks = chunks;
     this.speed = speed;
+    this.isTopLevel = isTopLevel;
   }
 
   get duration() {
@@ -44,8 +45,12 @@ class Chunk {
   play(soundLibrary, when=0, speedCount) {
     let subchunkWhen = when;
     this.subchunks.forEach(subchunk => {
-      subchunk.play(soundLibrary, subchunkWhen, speedCount + 1)
-      subchunkWhen += subchunk.duration;
+      const add = this.isTopLevel ? 0 : 1;
+      const pow = Math.pow(2, speedCount);
+      const mul = this.speed * pow;
+      const dur = subchunk.duration * mul;
+      subchunk.play(soundLibrary, subchunkWhen, speedCount + add);
+      subchunkWhen += dur;
     });
   }
 }
@@ -57,7 +62,7 @@ class Syllable {
     this.duration = 1 + extensions.interpret().length;
   }
 
-  play (soundLibrary, when=0) {
+  play (soundLibrary, when=0, speedCount) {
     const buffer = soundLibrary.get(this.syllable, this.type);
     playSample(buffer, when);
   }
@@ -65,7 +70,7 @@ class Syllable {
 
 semantics.addOperation('interpret', {
   Phrase (chunk) {
-    return new Chunk(chunk.interpret(), 1);
+    return new Chunk(chunk.interpret(), 1, true);
   },
   ChunkDouble_recur (start, chunk, end) {
     return new Chunk([chunk.interpret()], 2);
@@ -111,33 +116,17 @@ function setup() {
   Promise.all(soundFilePromises).then(() => {
     defaultSoundLibrary = createSoundLibrary(soundLibraryLookup);
     console.log('ready!');
-    [
-      'takadimi',
-      '[takadimi]',
-      '[[takadimi]]',
-      '[[[takadimi]]]',
-      '[[[[takadimi]]]]',
-      'takadimi',
-      '(takadimi)',
-      '((takadimi))',
-      '(((takadimi)))',
-      '((((takadimi))))'
-
-    ].forEach(w => {
-      console.log('----------------------');
-      console.log(w);
-      play(w);
-    });
+    play('takadimi');
   });
 }
 
-function play (input, soundLibrary=defaultSoundLibrary) {
+function play (input, soundLibrary=defaultSoundLibrary, when=0) {
   const result = grammar.match(input);
   const node = semantics(result);
   const phrase = node.interpret();
 
-  console.log("phrase:", phrase.duration);
-  phrase.play(soundLibrary);
+  // console.log("phrase:", phrase.duration);
+  phrase.play(soundLibrary, when, 0);
 }
 
 setup();
