@@ -106,7 +106,7 @@ konnakol.Syllable = class Syllable {
   }
 
   play(when=0, speedCount, soundLibrary=konnakol.soundLibraries.default) {
-    const buffer = soundLibrary.get(this.syllable, this.type);
+    const buffer = soundLibrary.get(this.syllable.toLowerCase(), this.type);
     audio.playSample(buffer, when);
   }
 
