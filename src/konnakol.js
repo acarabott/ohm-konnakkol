@@ -68,10 +68,11 @@ class Phrase extends Chunk {
 }
 
 class Syllable {
-  constructor(consonant, vowel, extensions, type) {
+  constructor(syllable, extension, type) {
     this.type = type;
-    this.syllable = consonant.sourceString + vowel.sourceString;
-    this.aksharas = 1 + extensions.interpret().length;
+    this.syllable = syllable;
+    this.extension = extension;
+    this.aksharas = 1 + extension.length;
   }
 
   getDuration(speed) {
@@ -82,32 +83,40 @@ class Syllable {
     const buffer = soundLibrary.get(this.syllable, this.type);
     playSample(buffer, when);
   }
+
+  toString() {
+    return this.syllable + this.extension;
+  }
 }
 
 semantics.addOperation('interpret', {
-  Phrase (chunk) {
-    return new Phrase(chunk.interpret());
+  Phrase (chunksExp) {
+    return new Phrase(chunksExp.interpret());
   },
-  ChunkDouble_recur (start, chunk, end) {
-    return new Chunk([chunk.interpret()], 2);
+  ChunkDouble_recur (startExp, chunkExp, endExp) {
+    return new Chunk([chunkExp.interpret()], 2);
   },
-  ChunkDouble_base (start, chunks, end) {
-    return new Chunk(chunks.interpret(), 2);
+  ChunkDouble_base (startExp, chunksExp, endExp) {
+    return new Chunk(chunksExp.interpret(), 2);
   },
-  ChunkHalf_recur (start, chunk, end) {
-    return new Chunk([chunk.interpret()], 0.5);
+  ChunkHalf_recur (startExp, chunkExp, endExp) {
+    return new Chunk([chunkExp.interpret()], 0.5);
   },
-  ChunkHalf_base (start, chunks, end) {
-    return new Chunk(chunks.interpret(), 0.5);
+  ChunkHalf_base (startExp, chunksExp, endExp) {
+    return new Chunk(chunksExp.interpret(), 0.5);
   },
-  word (syllables) {
-    return new Chunk(syllables.interpret(), 1);
+  word (syllablesExp) {
+    return new Chunk(syllablesExp.interpret(), 1);
   },
-  syllable_normal (consonant, vowel, extensions) {
-    return new Syllable(consonant, vowel, extensions, 'normal');
+  syllable_normal (consonantExp, vowelExp, extensionExp) {
+    const syllable = consonantExp.sourceString + vowelExp.sourceString;
+    const extension = extensionExp.interpret();
+    return new Syllable(syllable, extension, 'normal');
   },
-  syllable_stressed (consonant, vowel, extensions) {
-    return new Syllable(consonant, vowel, extensions, 'stress');
+  syllable_stressed (consonantExp, vowelExp, extensionExp) {
+    const syllable = consonantExp.sourceString + vowelExp.sourceString;
+    const extension = extensionExp.interpret();
+    return new Syllable(consonant, vowel, extension, 'stress');
   },
   extension_extend (exp) {
     return exp.sourceString;
