@@ -65,17 +65,21 @@ class Word {
 }
 
 class Chunk {
-  constructor(chunk) {
-    this.subchunk = chunk;
+  constructor(chunks) {
+    this.subchunks = chunks;
     this.speed = 1;
   }
 
   get duration() {
-    return this.subchunk.duration / this.speed;
+    return this.subchunks.reduce((prev, cur) => prev + cur.duration, 0) / this.speed;
   }
 
   play(soundLibrary, when=0, speedCount) {
-    this.subchunk.play(soundLibrary, when, speedCount + 1);
+    let subchunkWhen = when;
+    this.subchunks.forEach(subchunk => {
+      subchunk.play(soundLibrary, subchunkWhen, speedCount + 1)
+      subchunkWhen += subchunk.duration;
+    });
   }
 }
 
@@ -96,14 +100,14 @@ semantics.addOperation('interpret', {
   Phrase (chunk) {
     return new Phrase(chunk.interpret());
   },
-  ChunkDouble(word) {
-    return new Chunk(word.interpret());
+  // ChunkDouble(word) {
+    // return new Chunk(word.interpret());
+  // },
+  ChunkDouble_recur (start, chunk, end) {
+    return new Chunk([chunk.interpret()]);
   },
-  ChunkDouble_recur (start, phrase, end) {
-    return phrase.interpret();
-  },
-  ChunkDouble_base (start, phrase, end) {
-    return phrase.interpret();
+  ChunkDouble_base (start, chunks, end) {
+    return new Chunk(chunks.interpret());
   },
   ChunkHalf_recur (start, phrase, end) {
     return phrase.interpret();
@@ -165,6 +169,10 @@ function play (input, soundLibrary=defaultSoundLibrary) {
   const result = grammar.match(input);
   const node = semantics(result);
   const phrase = node.interpret();
+
+  phrase.chunks.forEach(chunk => {
+    console.log(chunk.duration);
+  });
 
   phrase.play(soundLibrary);
 }
