@@ -55,10 +55,10 @@ konnakol.Chunk = class Chunk {
     return sum / this.speed;
   }
 
-  play(soundLibrary, when=0, speed) {
+  play(when=0, speed, soundLibrary) {
     let subchunkWhen = when;
     this.subchunks.forEach(subchunk => {
-      subchunk.play(soundLibrary, subchunkWhen, speed * this.speed);
+      subchunk.play(subchunkWhen, speed * this.speed, soundLibrary);
       subchunkWhen += subchunk.getDuration(this.speed) / speed;
     });
   }
@@ -73,8 +73,8 @@ konnakol.Phrase = class Phrase extends konnakol.Chunk {
     return super.getDuration(1);
   }
 
-  play(soundLibrary, when) {
-    super.play(soundLibrary, when, 1);
+  play(when=0, soundLibrary) {
+    super.play(when, 1, soundLibrary);
   }
 }
 
@@ -90,7 +90,7 @@ konnakol.Syllable = class Syllable {
     return this.aksharas / speed;
   }
 
-  play (soundLibrary, when=0, speedCount) {
+  play(when=0, speedCount, soundLibrary=konnakol.soundLibraries.default) {
     const buffer = soundLibrary.get(this.syllable, this.type);
     audio.playSample(buffer, when);
   }
