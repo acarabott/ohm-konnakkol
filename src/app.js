@@ -1,21 +1,43 @@
-let defaultSoundLibrary;
 function setup() {
-  const audioPath = 'assets/audio/';
-  const audioFiles = {'normal': 'normal.mp3', 'stress': 'stress.mp3'};
+  const audioPath = 'assets/audio/mridangam/mr1/';
+  const audioFiles = {
+    default: { normal: 'ta.mp3', stress: 'nam.mp3' },
+    chap: { normal: 'chap.mp3' },
+    chpu: { normal: 'chapu.mp3' },
+    deem: { normal: 'deem1.mp3' },
+    dom: { normal: 'dom.mp3' },
+    gum: { normal: 'gumsl.mp3' },
+    ka: { normal: 'ka.mp3' },
+    ke: { normal: 'ke.mp3' },
+    ki: { normal: 'ki.mp3' },
+    kum: { normal: 'kum.mp3' },
+    na: { normal: 'na.mp3' },
+    nam: { normal: 'nam.mp3' },
+    ta: { normal: 'ta.mp3' },
+    tom: { normal: 'tom.mp3' }
+  };
   const soundLibraryLookup = { default: {} };
-  const soundFilePromises = Object.keys(audioFiles).map(key => {
-    return audio.loadAudio(`${audioPath}${audioFiles[key]}`).then(buffer => {
-      soundLibraryLookup.default[key] = buffer;
+  const soundFilePromises = Object.keys(audioFiles).map(strokeKey => {
+    soundLibraryLookup[strokeKey] = {};
+    Object.keys(audioFiles[strokeKey]).forEach(typeKey => {
+
+      const path = `${audioPath}${audioFiles[strokeKey][typeKey]}`;
+      const promise = audio.loadAudio(path).then(buffer => {
+        soundLibraryLookup[strokeKey][typeKey] = buffer;
+      });
+      soundLibraryLookup[strokeKey][typeKey] = promise;
+
+      return promise;
     });
   });
 
   Promise.all(soundFilePromises).then(() => {
-    defaultSoundLibrary = konnakol.createSoundLibrary(soundLibraryLookup);
+    konnakol.addSoundLibraryFromLookup('default', soundLibraryLookup);
     console.log('ready!');
   });
 }
 
-function play (input, soundLibrary=defaultSoundLibrary, when=0) {
+function play (input, when=0, soundLibraryKey='default') {
   const result = konnakol.grammar.match(input);
   if (result.failed()) {
     throw Error('Parsing failed, bad input!');
@@ -24,7 +46,9 @@ function play (input, soundLibrary=defaultSoundLibrary, when=0) {
 
   const node = konnakol.semantics(result);
   const phrase = node.interpret();
-  phrase.play(soundLibrary, when);
+  const soundLibrary = konnakol.soundLibraries[soundLibraryKey];
+  // phrase.play(when, soundLibrary);
+  phrase.play(when);
   return phrase;
 }
 
