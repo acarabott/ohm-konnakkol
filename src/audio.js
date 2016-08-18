@@ -1,6 +1,7 @@
-const audio = new AudioContext();
+const audio = {};
+audio.ctx = new AudioContext();
 
-function loadResource (url, responseType="") {
+audio.loadResource = (url, responseType="") => {
   return new Promise((resolve, reject) => {
     const request = new XMLHttpRequest();
     request.open('GET', url);
@@ -19,18 +20,18 @@ function loadResource (url, responseType="") {
   });
 }
 
-function loadAudio(url) {
-  return loadResource(url, 'arraybuffer').then(buffer => {
-    return audio.decodeAudioData(buffer,
+audio.loadAudio = (url) => {
+  return audio.loadResource(url, 'arraybuffer').then(buffer => {
+    return audio.ctx.decodeAudioData(buffer,
       decodedBuffer => decodedBuffer,
       error => error
     )
   });
 }
 
-function playSample (buffer, when=0) {
-  const source = audio.createBufferSource();
+audio.playSample = (buffer, when=0) => {
+  const source = audio.ctx.createBufferSource();
   source.buffer = buffer;
-  source.connect(audio.destination);
-  source.start(audio.currentTime + when);
+  source.connect(audio.ctx.destination);
+  source.start(audio.ctx.currentTime + when);
 }
