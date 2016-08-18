@@ -12,7 +12,7 @@ konnakol.createSoundLibrary = (lookup) => {
 
   ['normal', 'stress'].forEach(type => {
     if (!lookup.default.hasOwnProperty(type)) {
-      throw Error(`sound library default needs a sound for ${type}`);
+      throw Error(`sound library default needs a sound for '${type}'`);
     }
   })
 
