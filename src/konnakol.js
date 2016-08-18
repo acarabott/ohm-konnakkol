@@ -1,8 +1,11 @@
-const grammar = ohm.grammarFromScriptElement();
-const semantics = grammar.createSemantics();
+// requires ohm and audio global "modules"
 
-const createSoundLibrary = (_lookup) => {
-  const lookup = _lookup;
+const konnakol = {};
+konnakol.grammar = ohm.grammarFromScriptElement();
+konnakol.semantics = konnakol.grammar.createSemantics();
+konnakol.soundLibraries = {};
+
+konnakol.createSoundLibrary = (lookup) => {
   if (!lookup.hasOwnProperty('default')) {
     throw Error('sound library needs to have default sounds set');
   }
@@ -30,7 +33,11 @@ const createSoundLibrary = (_lookup) => {
   }
 };
 
-class Chunk {
+konnakol.addSoundLibrary = (name, lookup) => {
+  konnakol.soundLibraries[name] = konnakol.createSoundLibrary(lookup);
+}
+
+konnakol.Chunk = class Chunk {
   constructor(chunks, speed) {
     this.subchunks = chunks;
     this.speed = speed;
@@ -53,7 +60,7 @@ class Chunk {
   }
 }
 
-class Phrase extends Chunk {
+konnakol.Phrase = class Phrase extends konnakol.Chunk {
   constructor(chunks) {
     super(chunks, 1);
   }
@@ -67,7 +74,7 @@ class Phrase extends Chunk {
   }
 }
 
-class Syllable {
+konnakol.Syllable = class Syllable {
   constructor(syllable, extension, type) {
     this.type = type;
     this.syllable = syllable;
@@ -81,7 +88,7 @@ class Syllable {
 
   play (soundLibrary, when=0, speedCount) {
     const buffer = soundLibrary.get(this.syllable, this.type);
-    playSample(buffer, when);
+    audio.playSample(buffer, when);
   }
 
   toString() {
@@ -89,34 +96,34 @@ class Syllable {
   }
 }
 
-semantics.addOperation('interpret', {
+konnakol.semantics.addOperation('interpret', {
   Phrase (chunksExp) {
-    return new Phrase(chunksExp.interpret());
+    return new konnakol.Phrase(chunksExp.interpret());
   },
   ChunkDouble_recur (startExp, chunkExp, endExp) {
-    return new Chunk([chunkExp.interpret()], 2);
+    return new konnakol.Chunk([chunkExp.interpret()], 2);
   },
   ChunkDouble_base (startExp, chunksExp, endExp) {
-    return new Chunk(chunksExp.interpret(), 2);
+    return new konnakol.Chunk(chunksExp.interpret(), 2);
   },
   ChunkHalf_recur (startExp, chunkExp, endExp) {
-    return new Chunk([chunkExp.interpret()], 0.5);
+    return new konnakol.Chunk([chunkExp.interpret()], 0.5);
   },
   ChunkHalf_base (startExp, chunksExp, endExp) {
-    return new Chunk(chunksExp.interpret(), 0.5);
+    return new konnakol.Chunk(chunksExp.interpret(), 0.5);
   },
   word (syllablesExp) {
-    return new Chunk(syllablesExp.interpret(), 1);
+    return new konnakol.Chunk(syllablesExp.interpret(), 1);
   },
   syllable_normal (consonantExp, vowelExp, extensionExp) {
     const syllable = consonantExp.sourceString + vowelExp.sourceString;
     const extension = extensionExp.interpret();
-    return new Syllable(syllable, extension, 'normal');
+    return new konnakol.Syllable(syllable, extension, 'normal');
   },
   syllable_stressed (consonantExp, vowelExp, extensionExp) {
     const syllable = consonantExp.sourceString + vowelExp.sourceString;
     const extension = extensionExp.interpret();
-    return new Syllable(consonant, vowel, extension, 'stress');
+    return new konnakol.Syllable(consonant, vowel, extension, 'stress');
   },
   extension_extend (exp) {
     return exp.sourceString;
@@ -125,36 +132,3 @@ semantics.addOperation('interpret', {
     return exp.sourceString;
   }
 });
-
-
-let defaultSoundLibrary;
-function setup() {
-  const audioPath = 'assets/audio/';
-  const audioFiles = {'normal': 'normal.mp3', 'stress': 'stress.mp3'};
-  const soundLibraryLookup = { default: {} };
-  const soundFilePromises = Object.keys(audioFiles).map(key => {
-    return loadAudio(`${audioPath}${audioFiles[key]}`).then(buffer => {
-      soundLibraryLookup.default[key] = buffer;
-    });
-  });
-
-  Promise.all(soundFilePromises).then(() => {
-    defaultSoundLibrary = createSoundLibrary(soundLibraryLookup);
-    console.log('ready!');
-  });
-}
-
-function play (input, soundLibrary=defaultSoundLibrary, when=0) {
-  const result = grammar.match(input);
-  if (result.failed()) {
-    throw Error('Parsing failed, bad input!');
-    return;
-  }
-
-  const node = semantics(result);
-  const phrase = node.interpret();
-  phrase.play(soundLibrary, when);
-  return phrase;
-}
-
-setup();
