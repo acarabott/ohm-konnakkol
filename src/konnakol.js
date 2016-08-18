@@ -137,6 +137,11 @@ function setup() {
 
 function play (input, soundLibrary=defaultSoundLibrary, when=0) {
   const result = grammar.match(input);
+  if (result.failed()) {
+    throw Error('Parsing failed, bad input!');
+    return;
+  }
+
   const node = semantics(result);
   const phrase = node.interpret();
   phrase.play(soundLibrary, when);
