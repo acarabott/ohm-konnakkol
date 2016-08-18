@@ -116,18 +116,18 @@ konnakol.semantics.addOperation('interpret', {
   ChunkHalf_base (startExp, chunksExp, endExp) {
     return new konnakol.Chunk(chunksExp.interpret(), 0.5);
   },
-  word (syllablesExp) {
+  Word (syllablesExp) {
     return new konnakol.Chunk(syllablesExp.interpret(), 1);
   },
-  syllable_normal (consonantExp, vowelExp, extensionExp) {
+  Syllable_normal (consonantExp, vowelExp, extensionExp) {
     const syllable = consonantExp.sourceString + vowelExp.sourceString;
     const extension = extensionExp.interpret();
     return new konnakol.Syllable(syllable, extension, 'normal');
   },
-  syllable_stressed (consonantExp, vowelExp, extensionExp) {
+  Syllable_stressed (consonantExp, vowelExp, extensionExp) {
     const syllable = consonantExp.sourceString + vowelExp.sourceString;
     const extension = extensionExp.interpret();
-    return new konnakol.Syllable(consonant, vowel, extension, 'stress');
+    return new konnakol.Syllable(syllable, extension, 'stress');
   },
   extension_extend (exp) {
     return exp.sourceString;

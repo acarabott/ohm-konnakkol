@@ -4,7 +4,7 @@ Konnakol {
   Chunk =
       ChunkDouble
     | ChunkHalf
-    | word
+    | Word
 
   ChunkDouble =
        "(" ChunkDouble ")" --recur
@@ -14,9 +14,9 @@ Konnakol {
        "[" ChunkHalf "]" --recur
      | "[" Chunk+ "]" --base
 
-  word = syllable+
+  Word = Syllable+
 
-  syllable =
+  Syllable =
       consonant      vowel extension* --normal
     | upperConsonant vowel extension* --stressed
 
