@@ -24,7 +24,7 @@ Konnakol {
         "," --extend
       | "-" --rest
 
-    consonant = &("a".."z") ~vowel letter "h"? // is h the only case? ("h"|"r"|"l"|"y"|"w")?
+    consonant = &("a".."z") ~vowel letter consonant? // or ("h"|"r"|"l"|"y"|"w")?
 
     upperConsonant = &("A".."Z") ~upperVowel letter "h"?
 
