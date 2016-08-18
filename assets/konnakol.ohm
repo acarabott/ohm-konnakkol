@@ -8,11 +8,11 @@ Konnakol {
 
   ChunkDouble =
        "(" ChunkDouble ")" --recur
-     | "(" word ")" -- base
+     | "(" Chunk+ ")" -- base
 
   ChunkHalf =
        "[" ChunkHalf "]" --recur
-     | "[" word "]" --base
+     | "[" Chunk+ "]" --base
 
   word = syllable+
 
