@@ -30,48 +30,15 @@ const createSoundLibrary = (_lookup) => {
   }
 };
 
-class Phrase {
-  constructor(chunks) {
-    this.chunks = chunks;
-  }
-
-  play (soundLibrary, when=0) {
-    let chunkWhen = when;
-    this.chunks.forEach(chunk => {
-      chunk.play(soundLibrary, chunkWhen, 0);
-      chunkWhen += chunk.duration;
-    });
-  }
-}
-
-class Word {
-  constructor(syllables) {
-    this.syllables = syllables;
-  }
-
-  get duration() {
-    return this.syllables.reduce((prev, cur) => prev + cur.duration, 0);
-  }
-
-  play (soundLibrary, when=0, speedCount) {
-    let syllableWhen = when;
-    this.syllables.forEach(syllable => {
-      syllable.play(soundLibrary, syllableWhen);
-      syllableWhen += syllable.duration;
-    });
-
-    console.log("speedCount:", speedCount);
-  }
-}
-
 class Chunk {
-  constructor(chunks) {
+  constructor(chunks, speed) {
     this.subchunks = chunks;
-    this.speed = 1;
+    this.speed = speed;
   }
 
   get duration() {
-    return this.subchunks.reduce((prev, cur) => prev + cur.duration, 0) / this.speed;
+    const sum = this.subchunks.reduce((prev, cur) => prev + cur.duration, 0);
+    return sum / this.speed;
   }
 
   play(soundLibrary, when=0, speedCount) {
@@ -98,25 +65,22 @@ class Syllable {
 
 semantics.addOperation('interpret', {
   Phrase (chunk) {
-    return new Phrase(chunk.interpret());
+    return new Chunk(chunk.interpret(), 1);
   },
-  // ChunkDouble(word) {
-    // return new Chunk(word.interpret());
-  // },
   ChunkDouble_recur (start, chunk, end) {
-    return new Chunk([chunk.interpret()]);
+    return new Chunk([chunk.interpret()], 2);
   },
   ChunkDouble_base (start, chunks, end) {
-    return new Chunk(chunks.interpret());
+    return new Chunk(chunks.interpret(), 2);
   },
-  ChunkHalf_recur (start, phrase, end) {
-    return phrase.interpret();
+  ChunkHalf_recur (start, chunk, end) {
+    return new Chunk([chunk.interpret()], 0.5);
   },
-  ChunkHalf_base (start, phrase, end) {
-    return phrase.interpret();
+  ChunkHalf_base (start, chunks, end) {
+    return new Chunk(chunks.interpret(), 0.5);
   },
   word (syllables) {
-    return new Word(syllables.interpret());
+    return new Chunk(syllables.interpret(), 1);
   },
   syllable_normal (consonant, vowel, extensions) {
     return new Syllable(consonant, vowel, extensions, 'normal');
@@ -147,7 +111,19 @@ function setup() {
   Promise.all(soundFilePromises).then(() => {
     defaultSoundLibrary = createSoundLibrary(soundLibraryLookup);
     console.log('ready!');
-    ['ta', '(ta)', '((ta))', '(((ta)))', '((((ta))))'].forEach(w => {
+    [
+      'takadimi',
+      '[takadimi]',
+      '[[takadimi]]',
+      '[[[takadimi]]]',
+      '[[[[takadimi]]]]',
+      'takadimi',
+      '(takadimi)',
+      '((takadimi))',
+      '(((takadimi)))',
+      '((((takadimi))))'
+
+    ].forEach(w => {
       console.log('----------------------');
       console.log(w);
       play(w);
@@ -155,25 +131,12 @@ function setup() {
   });
 }
 
-function printChunks(obj) {
-  console.log(obj);
-  if (obj.hasOwnProperty('chunks')) {
-    obj.chunks.forEach(chunk => printChunks(chunk));
-  }
-  if (obj.hasOwnProperty('chunk')) {
-    printChunks(obj.chunk);
-  }
-}
-
 function play (input, soundLibrary=defaultSoundLibrary) {
   const result = grammar.match(input);
   const node = semantics(result);
   const phrase = node.interpret();
 
-  phrase.chunks.forEach(chunk => {
-    console.log(chunk.duration);
-  });
-
+  console.log("phrase:", phrase.duration);
   phrase.play(soundLibrary);
 }
 
