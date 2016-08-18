@@ -1,12 +1,11 @@
 # TODO
 
-- extensions/rests
-  - get input from nagaraj
-  - starting phrase with a rest
+- starting phrase with a rest
+- playback could adjust rate to match note length (if shorter than sample)
 - gati
-- lower speed _ / higher speed ^ * ' `
 - tala
 - highlight syllable where pulse falls?
+
 
 - stresses are currently capital letters, could be indicated by spaces e.g.
 
