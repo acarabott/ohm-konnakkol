@@ -29,9 +29,14 @@ audio.loadAudio = (url) => {
   });
 }
 
-audio.playSample = (buffer, when=0) => {
+audio.playSample = (buffer, when=0, mul=1) => {
   const source = audio.ctx.createBufferSource();
   source.buffer = buffer;
-  source.connect(audio.ctx.destination);
+
+  const gain = audio.ctx.createGain();
+  gain.gain.value = mul;
+
+  source.connect(gain);
+  gain.connect(audio.ctx.destination);
   source.start(audio.ctx.currentTime + when);
 }
