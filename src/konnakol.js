@@ -18,15 +18,30 @@ konnakol.createSoundLibrary = (lookup) => {
 
   return {
     get: (syllable, type) => {
-      const haveSound = lookup.hasOwnProperty(syllable) &&
-                        lookup[syllable].hasOwnProperty(type);
+      const haveSyllable = lookup.hasOwnProperty(syllable);
+      const haveSound = haveSyllable && lookup[syllable].hasOwnProperty(type);
 
-      if (haveSound) { return lookup[syllable][type]; }
+      function warning (useSyllable, useType) {
+        console.log(`warning: no sound for [${syllable}][${type}] using [${useSyllable}][${useType}]`);
+      }
+
+      if (haveSound) {
+        return lookup[syllable][type];
+      }
+
+      if (haveSyllable) {
+        const fallbackKey = Object.keys(lookup[syllable])[0];
+        warning(syllable, fallbackKey);
+        return lookup[syllable][fallbackKey];
+      }
 
       const defaultHasType = lookup.default.hasOwnProperty(type);
-      if (defaultHasType) { return lookup.default[type]; }
+      if (defaultHasType) {
+        warning('default', type);
+        return lookup.default[type];
+      }
 
-      console.log(`warning: no sound for [${syllable}][${type}], using default`);
+      warning('default', 'normal');
       return lookup.default['normal'];
     },
     set: (syllable, type, buffer) => lookup[syllable][type] = buffer
