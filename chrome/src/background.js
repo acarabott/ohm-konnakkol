@@ -5,7 +5,7 @@ chrome.browserAction.onClicked.addListener(tab => {
       runAt: 'document_end'
     }, results => {
       results.forEach(result => {
-        play(result);
+        play(result, 0.2);
         // if (result.length > 0) {
         //   chrome.runtime.sendMessage({selection: result}, response => {
         //     console.log("response:", response);
