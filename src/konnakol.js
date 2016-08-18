@@ -36,8 +36,11 @@ class Chunk {
     this.speed = speed;
   }
 
-  get duration() {
-    const sum = this.subchunks.reduce((prev, cur) => prev + cur.duration, 0);
+  getDuration(speed) {
+    const sum = this.subchunks.reduce((prev, cur) => {
+      return prev + cur.getDuration(speed);
+    }, 0);
+
     return sum / this.speed;
   }
 
@@ -45,7 +48,7 @@ class Chunk {
     let subchunkWhen = when;
     this.subchunks.forEach(subchunk => {
       subchunk.play(soundLibrary, subchunkWhen, speed * this.speed);
-      subchunkWhen += subchunk.duration / speed;
+      subchunkWhen += subchunk.getDuration(this.speed) / speed;
     });
   }
 }
@@ -53,6 +56,10 @@ class Chunk {
 class Phrase extends Chunk {
   constructor(chunks) {
     super(chunks, 1);
+  }
+
+  getDuration() {
+    return super.getDuration(1);
   }
 
   play(soundLibrary, when) {
@@ -64,7 +71,11 @@ class Syllable {
   constructor(consonant, vowel, extensions, type) {
     this.type = type;
     this.syllable = consonant.sourceString + vowel.sourceString;
-    this.duration = 1 + extensions.interpret().length;
+    this.aksharas = 1 + extensions.interpret().length;
+  }
+
+  getDuration(speed) {
+    return this.aksharas / speed;
   }
 
   play (soundLibrary, when=0, speedCount) {
@@ -129,6 +140,7 @@ function play (input, soundLibrary=defaultSoundLibrary, when=0) {
   const node = semantics(result);
   const phrase = node.interpret();
   phrase.play(soundLibrary, when);
+  return phrase;
 }
 
 setup();
