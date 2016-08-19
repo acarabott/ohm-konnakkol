@@ -94,11 +94,10 @@ konnakol.Phrase = class Phrase extends konnakol.Chunk {
 }
 
 konnakol.Syllable = class Syllable {
-  constructor(syllable, extension, type) {
+  constructor(syllable, type) {
     this.type = type;
     this.syllable = syllable;
-    this.extension = extension;
-    this.aksharas = 1 + extension.length;
+    this.aksharas = 1;
   }
 
   getDuration(speed) {
@@ -111,7 +110,18 @@ konnakol.Syllable = class Syllable {
   }
 
   toString() {
-    return this.syllable + this.extension;
+    return this.syllable;
+  }
+}
+
+konnakol.Silence = class Silence extends konnakol.Syllable {
+  constructor(symbol, type) {
+    super(symbol, type);
+  }
+
+  play(when=0, speedCount, soundLibrary) {
+    // do nothing!
+    return;
   }
 }
 
@@ -131,23 +141,21 @@ konnakol.semantics.addOperation('interpret', {
   ChunkHalf_base (startExp, chunksExp, endExp) {
     return new konnakol.Chunk(chunksExp.interpret(), 0.5);
   },
-  Word (syllablesExp) {
+  word (syllablesExp) {
     return new konnakol.Chunk(syllablesExp.interpret(), 1);
   },
-  Syllable_normal (consonantExp, vowelExp, extensionExp) {
+  syllable_normal (consonantExp, vowelExp) {
     const syllable = consonantExp.sourceString + vowelExp.sourceString;
-    const extension = extensionExp.interpret();
-    return new konnakol.Syllable(syllable, extension, 'normal');
+    return new konnakol.Syllable(syllable, 'normal');
   },
-  Syllable_stressed (consonantExp, vowelExp, extensionExp) {
+  syllable_stressed (consonantExp, vowelExp) {
     const syllable = consonantExp.sourceString + vowelExp.sourceString;
-    const extension = extensionExp.interpret();
-    return new konnakol.Syllable(syllable, extension, 'stress');
+    return new konnakol.Syllable(syllable, 'stress');
   },
-  extension_extend (exp) {
-    return exp.sourceString;
+  silence_extension (exp) {
+    return new konnakol.Silence(exp.sourceString, 'extension');
   },
-  extension_rest (exp) {
-    return exp.sourceString;
+  silence_rest (exp) {
+    return new konnakol.Silence(exp.sourceString, 'rest');
   }
 });
