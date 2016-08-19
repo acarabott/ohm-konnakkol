@@ -3,7 +3,7 @@ Konnakol {
 
   Gati = "gati"? digit+
 
-  Chunk = Gati? (ChunkDouble | ChunkHalf | word)
+  Chunk = Gati? (ChunkDouble | ChunkHalf | word)+
 
   ChunkDouble =
        "(" ChunkDouble ")" --recur
