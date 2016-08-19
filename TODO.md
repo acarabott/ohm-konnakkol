@@ -1,5 +1,7 @@
 # TODO
 
+- parse on load
+- parse on mutation
 - tala
 - playback could adjust rate to match note length (if shorter than sample)
 - highlight syllable where pulse falls?
