@@ -91,6 +91,13 @@ konnakol.Chunk = class Chunk {
   }
 }
 
+konnakol.Word = class Word extends konnakol.Chunk {
+  constructor(syllables, speed, gati) {
+    syllables[0].type = 'stress';
+    super(syllables, speed, gati);
+  }
+}
+
 konnakol.Phrase = class Phrase extends konnakol.Chunk {
   constructor(chunks) {
     super(chunks, 1);
@@ -166,7 +173,7 @@ konnakol.semantics.addOperation('interpret', {
     return new konnakol.Chunk(chunksExp.interpret(), 0.5);
   },
   word (syllablesExp) {
-    return new konnakol.Chunk(syllablesExp.interpret(), 1);
+    return new konnakol.Word(syllablesExp.interpret(), 1);
   },
   syllable_normal (consonantExp, vowelExp) {
     const syllable = consonantExp.sourceString + vowelExp.sourceString;
