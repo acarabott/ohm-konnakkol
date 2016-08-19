@@ -57,9 +57,17 @@ konnakol.addSoundLibraryFromLookup = (name, lookup) => {
 }
 
 konnakol.Chunk = class Chunk {
-  constructor(chunks, speed) {
+  constructor(chunks, speed, gati) {
     this.subchunks = chunks;
     this.speed = speed;
+    this.setGati(gati);
+  }
+
+  setGati(gati) {
+    this.gati = gati;
+    if (gati !== undefined) {
+      this.subchunks.forEach(subchunk => subchunk.setGati(gati));
+    }
   }
 
   getDuration(speed) {
@@ -94,10 +102,15 @@ konnakol.Phrase = class Phrase extends konnakol.Chunk {
 }
 
 konnakol.Syllable = class Syllable {
-  constructor(syllable, type) {
+  constructor(syllable, type, gati=4) {
     this.type = type;
     this.syllable = syllable;
     this.aksharas = 1;
+    this.setGati(gati);
+  }
+
+  setGati(gati) {
+    this.gati = gati;
   }
 
   getDuration(speed) {
@@ -128,6 +141,14 @@ konnakol.Silence = class Silence extends konnakol.Syllable {
 konnakol.semantics.addOperation('interpret', {
   Phrase (chunksExp) {
     return new konnakol.Phrase(chunksExp.interpret());
+  },
+  Gati (gatiExp) {
+    return parseInt(gatiExp.sourceString, 10);
+  },
+  Chunk (gatiExp, chunksExp) {
+    const chunks = chunksExp.interpret();
+    const gati = gatiExp.interpret()[0];
+    return new konnakol.Chunk(chunks, 1, gati);
   },
   ChunkDouble_recur (startExp, chunkExp, endExp) {
     return new konnakol.Chunk([chunkExp.interpret()], 2);
