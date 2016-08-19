@@ -37,7 +37,7 @@ function setup() {
   });
 }
 
-function play (input, when=0, soundLibraryKey='default') {
+function play (input, when=0.2, soundLibraryKey='default') {
   const result = konnakol.grammar.match(input);
   if (result.failed()) {
     throw Error(`Parsing failed, bad input!\n${result.message}`);
