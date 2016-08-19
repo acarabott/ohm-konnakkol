@@ -1,12 +1,9 @@
 Konnakol {
-  Phrase = (Gati? Chunk+)+
+  Phrase = Chunk+
 
   Gati = "gati"? digit+
 
-  Chunk =
-      ChunkDouble
-    | ChunkHalf
-    | word
+  Chunk = Gati? (ChunkDouble | ChunkHalf | word)
 
   ChunkDouble =
        "(" ChunkDouble ")" --recur
