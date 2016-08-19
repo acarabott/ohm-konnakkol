@@ -46,8 +46,7 @@ function play (input, when=0, soundLibraryKey='default') {
   const node = konnakol.semantics(result);
   const phrase = node.interpret();
   const soundLibrary = konnakol.soundLibraries[soundLibraryKey];
-  // phrase.play(when, soundLibrary);
-  phrase.play(when);
+  phrase.play(when, soundLibrary);
   return phrase;
 }
 
