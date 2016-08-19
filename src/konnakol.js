@@ -149,15 +149,12 @@ konnakol.Silence = class Silence extends konnakol.Syllable {
 }
 
 konnakol.repeatChunksExp = (originalSubchunks, repeatExp) => {
-    let numRepeats = repeatExp.interpret()[0];
-    numRepeats = numRepeats === undefined ? 1 : numRepeats;
-
-    const subchunks = [];
-    for (let i = 0; i < numRepeats; i++) {
-      originalSubchunks.forEach(subchunk => subchunks.push(subchunk));
-    }
-
-    return subchunks;
+  let numRepeats = repeatExp.interpret()[0];
+  numRepeats = numRepeats === undefined ? 1 : numRepeats;
+  const numSubchunks = numRepeats * originalSubchunks.length;
+  return Array.from(Array(numSubchunks)).map((x, i) => {
+    return originalSubchunks[i % originalSubchunks.length];
+  });
 };
 
 konnakol.semantics.addOperation('interpret', {
