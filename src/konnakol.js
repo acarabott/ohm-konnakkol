@@ -85,6 +85,10 @@ konnakol.Chunk = class Chunk {
       subchunkWhen += subchunk.getDuration(this.speed) / speed;
     });
   }
+
+  toString() {
+    return this.subchunks.map(subchunk => subchunk.toString()).join(' ');
+  }
 }
 
 konnakol.Phrase = class Phrase extends konnakol.Chunk {
@@ -123,7 +127,7 @@ konnakol.Syllable = class Syllable {
   }
 
   toString() {
-    return this.syllable;
+    return `${this.gati}${this.syllable}`;
   }
 }
 
