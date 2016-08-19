@@ -149,7 +149,17 @@ konnakol.Silence = class Silence extends konnakol.Syllable {
 }
 
 konnakol.semantics.addOperation('interpret', {
+  RepeatedChunk (chunkExp, repeatExp) {
+    let mul = repeatExp.interpret()[0];
+    mul = mul === undefined ? 1 : mul;
+    const chunks = Array.from(Array(mul)).map(x => chunkExp.interpret());
+    return new konnakol.Chunk(chunks, 1)
+  },
+  Repeat (operatorExp, mulExp) {
+    return parseInt(mulExp.sourceString, 10);
+  },
   Phrase (chunksExp) {
+    const chunks = chunksExp.interpret();
     return new konnakol.Phrase(chunksExp.interpret());
   },
   Gati (gatiExp) {

@@ -1,7 +1,11 @@
 Konnakol {
-  Phrase = Chunk+
+  Phrase = RepeatedChunk+
 
   Gati = digit+
+
+  RepeatedChunk = Chunk Repeat?
+
+  Repeat = "*" digit+
 
   Chunk = Gati? (ChunkDouble | ChunkHalf | word)+
 
