@@ -109,8 +109,7 @@ konnakol.Syllable = class Syllable {
   constructor(syllable, type, gati=4) {
     this.type = type;
     this.syllable = syllable;
-    this.aksharas = 1;
-    this.setGati(gati);
+    this.gati = gati;
   }
 
   setGati(gati) {
@@ -118,7 +117,7 @@ konnakol.Syllable = class Syllable {
   }
 
   getDuration(speed) {
-    return this.aksharas / speed;
+    return (1 / this.gati) / speed;
   }
 
   play(when=0, speedCount, soundLibrary=konnakol.soundLibraries.default) {
