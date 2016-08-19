@@ -9,8 +9,8 @@ Konnakol {
   Chunk = Gati? (ChunkDouble | ChunkHalf | word)+ Repeat?
 
   ChunkDouble =
-       "(" ChunkDouble ")" --recur
-     | "(" Chunk+ ")" -- base
+       "{" ChunkDouble "}" --recur
+     | "{" Chunk+ "}" -- base
 
   ChunkHalf =
        "[" ChunkHalf "]" --recur
