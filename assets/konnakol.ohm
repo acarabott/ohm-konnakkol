@@ -5,7 +5,8 @@ Konnakol {
 
   Repeat = "*" digit+
 
-  Chunk = Gati? (ChunkDouble | ChunkHalf | word)+ Repeat?
+  Chunk = Gati? (ChunkDouble | ChunkHalf | word)+ Repeat? --normal
+     | "(" Chunk ")" Repeat? --paren
 
   ChunkDouble =
        "{" ChunkDouble "}" --recur
