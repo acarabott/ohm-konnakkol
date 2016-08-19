@@ -1,13 +1,12 @@
 Konnakol {
-  Phrase = RepeatedChunk+
+  Phrase = Chunk+
 
   Gati = digit+
 
-  RepeatedChunk = Chunk Repeat?
 
   Repeat = "*" digit+
 
-  Chunk = Gati? (ChunkDouble | ChunkHalf | word)+
+  Chunk = Gati? (ChunkDouble | ChunkHalf | word)+ Repeat?
 
   ChunkDouble =
        "(" ChunkDouble ")" --recur

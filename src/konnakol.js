@@ -149,15 +149,6 @@ konnakol.Silence = class Silence extends konnakol.Syllable {
 }
 
 konnakol.semantics.addOperation('interpret', {
-  RepeatedChunk (chunkExp, repeatExp) {
-    let mul = repeatExp.interpret()[0];
-    mul = mul === undefined ? 1 : mul;
-    const chunks = Array.from(Array(mul)).map(x => chunkExp.interpret());
-    return new konnakol.Chunk(chunks, 1)
-  },
-  Repeat (operatorExp, mulExp) {
-    return parseInt(mulExp.sourceString, 10);
-  },
   Phrase (chunksExp) {
     const chunks = chunksExp.interpret();
     return new konnakol.Phrase(chunksExp.interpret());
@@ -165,10 +156,22 @@ konnakol.semantics.addOperation('interpret', {
   Gati (gatiExp) {
     return parseInt(gatiExp.sourceString, 10);
   },
-  Chunk (gatiExp, chunksExp) {
-    const chunks = chunksExp.interpret();
+  Repeat (operatorExp, mulExp) {
+    return parseInt(mulExp.sourceString, 10);
+  },
+  Chunk (gatiExp, chunksExp, repeatExp) {
+    const originalSubchunks = chunksExp.interpret();
     const gati = gatiExp.interpret()[0];
-    return new konnakol.Chunk(chunks, 1, gati);
+
+    let numRepeats = repeatExp.interpret()[0];
+    numRepeats = numRepeats === undefined ? 1 : numRepeats;
+
+    const subchunks = [];
+    for (let i = 0; i < numRepeats; i++) {
+      originalSubchunks.forEach(subchunk => subchunks.push(subchunk));
+    }
+
+    return new konnakol.Chunk(subchunks, 1, gati);
   },
   ChunkDouble_recur (startExp, chunkExp, endExp) {
     return new konnakol.Chunk([chunkExp.interpret()], 2);
