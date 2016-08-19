@@ -5,16 +5,16 @@ function setup() {
     chap: { normal: 'chap.mp3' },
     chpu: { normal: 'chapu.mp3' },
     deem: { normal: 'deem1.mp3' },
-    dom: { normal: 'dom.mp3' },
+    dom: { normal: 'dom.mp3', stress: 'dom1.mp3' },
     gum: { normal: 'gumsl.mp3' },
     ka: { normal: 'ka.mp3' },
     ke: { normal: 'ke.mp3' },
     ki: { normal: 'ki.mp3' },
-    kum: { normal: 'kum.mp3' },
-    na: { normal: 'na.mp3' },
+    kum: { normal: 'kum.mp3', stress: 'kum2.mp3' },
+    na: { normal: 'na.mp3', stress: 'nam.mp3' },
     nam: { normal: 'nam.mp3' },
-    ta: { normal: 'ta.mp3' },
-    tom: { normal: 'tom.mp3' }
+    ta: { normal: 'ta.mp3', stress: 'ta2.mp3'},
+    tom: { normal: 'toms.mp3', stress: 'tom.mp3' }
   };
   const soundLibraryLookup = { default: {} };
   const soundFilePromises = Object.keys(audioFiles).map(strokeKey => {
