@@ -9,13 +9,13 @@ for (let node of all) {
     continue;
   }
 
-  if (node.textContent.includes(key)) {
-    konnakols.push(node.textContent);
+  if (node.value !== undefined && node.value.includes(key)) {
+    konnakols.push(node.value);
     continue;
   }
 
-  if (node.value !== undefined && node.value.includes(key)) {
-    konnakols.push(node.value);
+  if (node.textContent.includes(key)) {
+    konnakols.push(node.textContent);
     continue;
   }
 }
