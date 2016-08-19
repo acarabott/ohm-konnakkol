@@ -1,5 +1,7 @@
 Konnakol {
-  Phrase = Chunk+
+  Phrase = (Gati? Chunk+)+
+
+  Gati = "gati"? digit+
 
   Chunk =
       ChunkDouble
