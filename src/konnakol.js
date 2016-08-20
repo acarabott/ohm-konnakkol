@@ -31,17 +31,17 @@ konnakol.createSoundLibrary = (lookup) => {
 
       if (haveSyllable) {
         const fallbackKey = Object.keys(lookup[syllable])[0];
-        warning(syllable, fallbackKey);
+        // warning(syllable, fallbackKey);
         return lookup[syllable][fallbackKey];
       }
 
       const defaultHasType = lookup.default.hasOwnProperty(type);
       if (defaultHasType) {
-        warning('default', type);
+        // warning('default', type);
         return lookup.default[type];
       }
 
-      warning('default', 'normal');
+      // warning('default', 'normal');
       return lookup.default['normal'];
     },
     set: (syllable, type, buffer) => lookup[syllable][type] = buffer
