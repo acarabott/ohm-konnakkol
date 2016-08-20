@@ -1,12 +1,12 @@
 Konnakol {
   Phrase = Chunk+
 
-  Gati = digit+
+  Gati = "g" digit+
 
   Repeat = "*" digit+
 
   Chunk = Gati? (ChunkDouble | ChunkHalf | word)+ Repeat? --normal
-     | "(" Chunk ")" Repeat? --paren
+     | Gati? "(" Chunk+ ")" Repeat? --paren
 
   ChunkDouble =
        "{" ChunkDouble "}" --recur
