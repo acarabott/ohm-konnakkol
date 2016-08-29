@@ -3,7 +3,7 @@ Konnakol {
 
   Gati = "g" digit+
 
-  Repeat = "*" digit+
+  Repeat = ("*" | "x") digit+
 
   Chunk = Gati? (ChunkDouble | ChunkHalf | word)+ Repeat? --normal
      | Gati? "(" Chunk+ ")" Repeat? --paren
