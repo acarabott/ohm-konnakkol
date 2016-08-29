@@ -1,16 +1,21 @@
 const port = chrome.runtime.connect();
 const key = '/konnakol';
-const konnakolNodes = Array.from(document.body.querySelectorAll('*'))
-  .filter(node => {
-    return node.tagName.toUpperCase() !== 'SCRIPT' && // no scripts
-           node.children.length === 0 &&              // no parent nodes
-           ((node.value !== undefined && node.value.includes(key)) || // has key
-            node.textContent.includes(key));
-  });
+
+function hasKonnakolKey (node) {
+  return (node.value !== undefined && node.value.includes(key)) ||
+          node.textContent.includes(key);
+}
 
 function getKonnakolContent (element) {
   return element.value === undefined ? element.textContent : element.value;
 }
+
+const konnakolNodes = Array.from(document.body.querySelectorAll('*'))
+  .filter(node => {
+    return node.tagName.toUpperCase() !== 'SCRIPT' && // no scripts
+           node.children.length === 0 &&              // no parent nodes
+           hasKonnakolKey(node);                      // has the key we want
+  });
 
 function addPlayButton (element) {
   const button = document.createElement('input');
@@ -23,5 +28,3 @@ function addPlayButton (element) {
 }
 
 konnakolNodes.forEach(konnakol => addPlayButton(konnakol));
-
-// port.postMessage(konnakols);
