@@ -15,6 +15,24 @@ konnakol.parse = (parent=document.body, buttonAction) => {
     return content.replace(konnakol.key, '');
   };
 
+  const createPlayButtonFor = node => {
+    const button = document.createElement('input');
+    button.type = 'button';
+    button.value = 'play';
+
+    let content = getNodeContent(node);
+    button.addEventListener('click', event => {
+      buttonAction(content, event);
+    });
+    node.parentElement.insertBefore(button, node.nextSibling);
+
+    if (['textarea', 'input'].includes(node.tagName.toLowerCase())) {
+      node.addEventListener('input', event => {
+        content = getNodeContent(node);
+      });
+    }
+  };
+
   const konnakolNodes = Array.from(parent.querySelectorAll('*'))
     .filter(node => {
       return node.tagName.toUpperCase() !== 'SCRIPT' && // no scripts
@@ -22,15 +40,7 @@ konnakol.parse = (parent=document.body, buttonAction) => {
              hasKonnakolKey(node);                      // has the key we want
     });
 
-  konnakolNodes.forEach(node =>  {
-    const button = document.createElement('input');
-    button.type = 'button';
-    button.value = 'play';
-    button.addEventListener('click', event => {
-      buttonAction(getNodeContent(node), event);
-    });
-    node.parentElement.insertBefore(button, node.nextSibling);
-  });
+  konnakolNodes.forEach(node => createPlayButtonFor(node));
 };
 
 konnakol.parse(document.body, (text, event) => {
