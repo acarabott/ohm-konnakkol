@@ -1,23 +1,18 @@
-const all = document.body.querySelectorAll('*');
 const port = chrome.runtime.connect();
-const konnakols = [];
-
 const key = '/konnakol';
-
-for (let node of all) {
-  if (node.children.length !== 0) {
-    continue;
-  }
-
-  if (node.value !== undefined && node.value.includes(key)) {
-    konnakols.push(node.value);
-    continue;
-  }
-
-  if (node.textContent.includes(key)) {
-    konnakols.push(node.textContent);
-    continue;
-  }
-}
+const konnakols = Array.from(document.body.querySelectorAll('*'))
+  .filter(node => (node.tagName.toUpperCase() !== 'SCRIPT') &&
+                   node.children.length === 0)
+  .map(node => {
+    let konnakol;
+    if (node.value !== undefined && node.value.includes(key)) {
+      konnakol = node.value;
+    }
+    else if (node.textContent.includes(key)) {
+      konnakol = node.textContent;
+    }
+    return konnakol;
+  })
+  .filter(node => node !== undefined);
 
 port.postMessage(konnakols);
