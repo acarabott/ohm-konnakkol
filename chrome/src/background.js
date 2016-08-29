@@ -13,6 +13,6 @@ chrome.browserAction.onClicked.addListener(tab => {
 
 chrome.runtime.onConnect.addListener(port => {
   port.onMessage.addListener((message, sender, sendResponse) => {
-    play(message[0].replace('/konnakol', ''));
+    konnakol.play(message);
   });
 });

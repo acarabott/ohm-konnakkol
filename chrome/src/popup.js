@@ -7,6 +7,10 @@ clicky.addEventListener('click', event => {
       allFrames: true,
       runAt: 'document_end'
     }, results => {
+      if (results === undefined) {
+        return;
+      }
+
       results.forEach(result => {
         if (result.length > 0) {
           chrome.runtime.sendMessage({selection: result}, response => {

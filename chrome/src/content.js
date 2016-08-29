@@ -1,30 +1,38 @@
 const port = chrome.runtime.connect();
-const key = '/konnakol';
 
-function hasKonnakolKey (node) {
-  return (node.value !== undefined && node.value.includes(key)) ||
-          node.textContent.includes(key);
-}
+const konnakol = {};
+konnakol.key = '/konnakol';
 
-function getKonnakolContent (element) {
-  return element.value === undefined ? element.textContent : element.value;
-}
+konnakol.parse = (parent=document.body, buttonAction) => {
+  const hasKonnakolKey = node => {
+    return (typeof node.value === 'string' && node.value.includes(konnakol.key)) ||
+            node.textContent.includes(konnakol.key);
+  };
 
-const konnakolNodes = Array.from(document.body.querySelectorAll('*'))
-  .filter(node => {
-    return node.tagName.toUpperCase() !== 'SCRIPT' && // no scripts
-           node.children.length === 0 &&              // no parent nodes
-           hasKonnakolKey(node);                      // has the key we want
+  const getNodeContent = node => {
+    // input elements will use value, other elements will use textContent
+    const content = node.value === undefined ? node.textContent : node.value;
+    return content.replace(konnakol.key, '');
+  };
+
+  const konnakolNodes = Array.from(parent.querySelectorAll('*'))
+    .filter(node => {
+      return node.tagName.toUpperCase() !== 'SCRIPT' && // no scripts
+             node.children.length === 0 &&              // no parent nodes
+             hasKonnakolKey(node);                      // has the key we want
+    });
+
+  konnakolNodes.forEach(node =>  {
+    const button = document.createElement('input');
+    button.type = 'button';
+    button.value = 'play';
+    button.addEventListener('click', event => {
+      buttonAction(getNodeContent(node), event);
+    });
+    node.parentElement.insertBefore(button, node.nextSibling);
   });
+};
 
-function addPlayButton (element) {
-  const button = document.createElement('input');
-  button.type = 'button';
-  button.value = 'play';
-  button.addEventListener('click', event => {
-    port.postMessage([getKonnakolContent(element)]);
-  });
-  element.parentElement.insertBefore(button, element.nextSibling);
-}
-
-konnakolNodes.forEach(konnakol => addPlayButton(konnakol));
+konnakol.parse(document.body, (text, event) => {
+  port.postMessage(text);
+});

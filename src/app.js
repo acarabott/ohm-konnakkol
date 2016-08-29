@@ -31,23 +31,11 @@ function setup() {
     });
   });
 
-  Promise.all(soundFilePromises).then(() => {
+  return Promise.all(soundFilePromises).then(() => {
     konnakol.addSoundLibraryFromLookup('default', soundLibraryLookup);
-    console.log('ready!');
   });
 }
 
-function play (input, when=0.2, soundLibraryKey='default') {
-  const result = konnakol.grammar.match(input);
-  if (result.failed()) {
-    throw Error(`Parsing failed, bad input!\n${result.message}`);
-  }
-
-  const node = konnakol.semantics(result);
-  const phrase = node.interpret();
-  const soundLibrary = konnakol.soundLibraries[soundLibraryKey];
-  phrase.play(when, soundLibrary);
-  return phrase;
-}
-
-setup();
+setup().then(success => {
+  console.log('ready');
+});

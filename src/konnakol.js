@@ -14,7 +14,7 @@ konnakol.createSoundLibrary = (lookup) => {
     if (!lookup.default.hasOwnProperty(type)) {
       throw Error(`sound library default needs a sound for '${type}'`);
     }
-  })
+  });
 
   return {
     get: (syllable, type) => {
@@ -45,16 +45,16 @@ konnakol.createSoundLibrary = (lookup) => {
       return lookup.default['normal'];
     },
     set: (syllable, type, buffer) => lookup[syllable][type] = buffer
-  }
+  };
 };
 
 konnakol.addSoundLibrary = (name, soundLibrary) => {
   konnakol.soundLibraries[name] = soundLibrary;
-}
+};
 
 konnakol.addSoundLibraryFromLookup = (name, lookup) => {
   konnakol.addSoundLibrary(name, konnakol.createSoundLibrary(lookup));
-}
+};
 
 konnakol.Chunk = class Chunk {
   constructor(chunks, speed, gati) {
@@ -89,14 +89,14 @@ konnakol.Chunk = class Chunk {
   toString() {
     return this.subchunks.map(subchunk => subchunk.toString()).join(' ');
   }
-}
+};
 
 konnakol.Word = class Word extends konnakol.Chunk {
   constructor(syllables, speed, gati) {
     syllables[0].type = 'stress';
     super(syllables, speed, gati);
   }
-}
+};
 
 konnakol.Phrase = class Phrase extends konnakol.Chunk {
   constructor(chunks) {
@@ -110,7 +110,7 @@ konnakol.Phrase = class Phrase extends konnakol.Chunk {
   play(when=0, soundLibrary) {
     super.play(when, 1, soundLibrary);
   }
-}
+};
 
 konnakol.Syllable = class Syllable {
   constructor(syllable, type, gati=4) {
@@ -135,7 +135,7 @@ konnakol.Syllable = class Syllable {
   toString() {
     return `${this.gati}${this.syllable}`;
   }
-}
+};
 
 konnakol.Silence = class Silence extends konnakol.Syllable {
   constructor(symbol, type) {
@@ -146,7 +146,7 @@ konnakol.Silence = class Silence extends konnakol.Syllable {
     // do nothing!
     return;
   }
-}
+};
 
 konnakol.repeatChunksExp = (chunksExp, repeatExp) => {
   const originalSubchunks = chunksExp.interpret();
@@ -209,3 +209,16 @@ konnakol.semantics.addOperation('interpret', {
     return new konnakol.Silence(exp.sourceString, 'rest');
   }
 });
+
+konnakol.play = function(input, when=0.2, soundLibraryKey='default') {
+  const result = konnakol.grammar.match(input);
+  if (result.failed()) {
+    throw Error(`Parsing failed, bad input!\n${result.message}`);
+  }
+
+  const node = konnakol.semantics(result);
+  const phrase = node.interpret();
+  const soundLibrary = konnakol.soundLibraries[soundLibraryKey];
+  phrase.play(when, soundLibrary);
+  return phrase;
+};
