@@ -6,6 +6,7 @@
   <script src="assets/konnakol.ohm" type="text/ohm-js"></script>
   <script src="dst/audio.js"></script>
   <script src="dst/konnakol.js"></script>
+  <script src="dst/konnakol-editor.js"></script>
   <script src="dst/app.js"></script>
   <style>
     body {
@@ -56,61 +57,12 @@
 
 </div>
 
-<textarea id="text" cols="80" rows="10">
-g4
-Takadimi Takajuna Takadimi g5 (DadiGinadom DadiGinadom)
-Tom
-</textarea>
-
-<div>
-  <input id="button" class="button" type="button" value="Play">
-
-</div>
-
 </body>
 <script>
-  var textarea = document.getElementById('text');
-  var selectionStart = 0;
-  var selectionEnd = 0;
+  const editor = new konnakol.Editor('one');
+  document.body.appendChild(editor.container);
 
-  function updateSelection() {
-    selectionStart = textarea.selectionStart;
-    selectionEnd = textarea.selectionEnd;
-  }
-
-  function getContent() {
-    updateSelection();
-    return selectionEnd - selectionStart > 0 ?
-      textarea.value.slice(selectionStart, selectionEnd) :
-      textarea.value;
-  }
-
-  function play(text) {
-    konnakol.play(text.replace('/konnakol', ''));
-  }
-
-  function getContentAndPlay() {
-    play(getContent());
-  }
-
-  textarea.addEventListener('focusin', function (event) {
-    event.target.selectionStart = selectionStart;
-    event.target.selectionEnd = selectionEnd;
-  });
-
-  textarea.addEventListener('focusout', function (event) {
-    updateSelection();
-  });
-
-  textarea.addEventListener('keydown', function (event) {
-    if (event.key === "Enter" && event.metaKey) {
-      getContentAndPlay();
-    }
-  });
-
-  var button = document.getElementById('button');
-  button.addEventListener('click', function (event) {
-    getContentAndPlay();
-  });
+  const editor2 = new konnakol.Editor('two');
+  document.body.appendChild(editor2.container);
 </script>
 </html>
