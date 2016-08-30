@@ -61,6 +61,7 @@
 
   setContent(content) {
     this.textarea.value = content;
+    this.textarea.rows = content.split('').filter(c => c === '\n').length + 1;
   }
 
   play() {
