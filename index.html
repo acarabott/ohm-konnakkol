@@ -47,34 +47,51 @@
 
 <div>
   <p>
-    Syllables and phrases can be entered in the text box below and played either
-    with the play button
+    Syllables and phrases like 'takadimi takajuna' can be entered in the text box with the play button.
+  </p>
+
+  <p>
+    You can also use the keyboard shortcut <span class="code">Command Enter</span> (Mac) <span class="code">Control Enter</span> (Windows / Linux)
   </p>
 
 </div>
 
-<textarea id="text" cols="100" rows="30">
+<textarea id="text" cols="80" rows="10">
 g4
 Takadimi Takajuna Takadimi g5 (DadiGinadom DadiGinadom)
 Tom
 </textarea>
 
 <div>
-  <input id="button" type="button" value="Play">
+  <input id="button" class="button" type="button" value="Play">
 
 </div>
 
 </body>
 <script>
   var textarea = document.getElementById('text');
-  var content = '';
-
-  function play() {
-    konnakol.play(content.replace('/konnakol', ''));
-  }
-
   var selectionStart = 0;
   var selectionEnd = 0;
+
+  function updateSelection() {
+    selectionStart = textarea.selectionStart;
+    selectionEnd = textarea.selectionEnd;
+  }
+
+  function getContent() {
+    updateSelection();
+    return selectionEnd - selectionStart > 0 ?
+      textarea.value.slice(selectionStart, selectionEnd) :
+      textarea.value;
+  }
+
+  function play(text) {
+    konnakol.play(text.replace('/konnakol', ''));
+  }
+
+  function getContentAndPlay() {
+    play(getContent());
+  }
 
   textarea.addEventListener('focusin', function (event) {
     event.target.selectionStart = selectionStart;
@@ -82,22 +99,18 @@ Tom
   });
 
   textarea.addEventListener('focusout', function (event) {
-    selectionStart = event.target.selectionStart;
-    selectionEnd = event.target.selectionEnd;
-    content = event.target.value.slice(selectionStart, selectionEnd);
+    updateSelection();
   });
 
   textarea.addEventListener('keydown', function (event) {
     if (event.key === "Enter" && event.metaKey) {
-      var selection = window.getSelection().toString();
-      content = selection.length > 0 ? selection : textarea.value;
-      play();
+      getContentAndPlay();
     }
   });
 
   var button = document.getElementById('button');
   button.addEventListener('click', function (event) {
-    play();
+    getContentAndPlay();
   });
 </script>
 </html>
