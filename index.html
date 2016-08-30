@@ -183,6 +183,39 @@ Takadimi takaJuna
     'Stresses can be added by capitalising the consonant of a syllable'
   );
 
+  addExample('doubles',
+    `Takadimi {Takadimi Takajuna} Tham`,
+    'Double speed',
+    `Use <span class="code">{</span> and <span class="code">}</span> around your konnakol to double the speed`
+  );
+
+  addExample('multi-double',
+    `Takadimi {takadimi} {{takadimi takadimi}} Tham`,
+    '',
+    'You can double as many times as you like'
+  );
+
+  addExample('nested-double',
+    `{ Dadigi{naka}dom Dadigi{naka}dom Dadigi{naka}dom} Tham`,
+    '',
+    'Or have nested doubling (doubles inside doubles)'
+  );
+
+  addExample('half-speed',
+    `Takadimi [Takadimi]
+[Takadimi [Taka]] Tham
+    `,
+    'Half speed',
+    'For half speed use <span class="code">[</span> and <span class="code">]</span>, it works just like doubling'
+  );
+
+  addExample('mixed',
+    `[Ta , ka , Ta ki ta]
+[Ta ka] Takita [Ta ka] Takita
+{[Ta ka] Takita [Ta ka] Takita} Tham`,
+    'Mixed speed',
+    'You can even mix double and half speed'
+  );
 
 </script>
 </html>
