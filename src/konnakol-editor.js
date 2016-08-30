@@ -30,6 +30,10 @@
       }
     });
 
+    this.textarea.addEventListener('input', event => {
+      this.updateNumberOfRows();
+    });
+
     this.container.appendChild(this.textarea);
 
     // controls
@@ -52,6 +56,13 @@
     this.selectionEnd = this.textarea.selectionEnd;
   }
 
+  updateNumberOfRows() {
+    const contentRows = this.textarea.value
+                            .split('')
+                            .filter(c => c === '\n').length + 1;
+    this.textarea.rows = Math.max(Math.max(contentRows, this.textarea.rows), 2);
+  }
+
   getContent() {
     this.updateSelection();
     return this.selectionEnd - this.selectionStart > 0 ?
@@ -61,7 +72,7 @@
 
   setContent(content) {
     this.textarea.value = content;
-    this.textarea.rows = content.split('').filter(c => c === '\n').length + 1;
+    this.updateNumberOfRows();
   }
 
   play() {
