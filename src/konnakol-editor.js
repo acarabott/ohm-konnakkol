@@ -58,6 +58,10 @@
       this.textarea.value;
   }
 
+  setContent(content) {
+    this.textarea.value = content;
+  }
+
   play() {
     konnakol.play(this.getContent().replace(this.key, ''));
   }
