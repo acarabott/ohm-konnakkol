@@ -93,7 +93,6 @@ konnakol.Chunk = class Chunk {
 
 konnakol.Word = class Word extends konnakol.Chunk {
   constructor(syllables, speed, gati) {
-    syllables[0].type = 'stress';
     super(syllables, speed, gati);
   }
 };
