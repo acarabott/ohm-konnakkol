@@ -53,22 +53,29 @@
 <h1>Konnakol</h1>
 
 <div>
-  <p>
-    Syllables and phrases like 'takadimi takajuna' can be entered in the text box with the play button.
-  </p>
+  <div id="basic-play">
+    <p>
+      Syllables and phrases can be written and played with the play button
+    </p>
 
-  <p>
-    You can also use the keyboard shortcut <span class="code">Command Enter</span> (Mac) <span class="code">Control Enter</span> (Windows / Linux)
-  </p>
+  </div>
+
+  <div id="key-command">
+    <p>
+      If the text box is focused (click on it to focus) you can also use the keyboard shortcut <span class="code">Command Enter</span> (Mac) <span class="code">Control Enter</span> (Windows / Linux)
+    </p>
+  </div>
 
 </div>
 
 </body>
 <script>
-  const editor = new konnakol.Editor('one');
-  document.body.appendChild(editor.container);
+  const basicPlay = new konnakol.Editor('basic-play-editor');
+  basicPlay.setContent('takadimitakajuna');
+  document.getElementById('basic-play').appendChild(basicPlay.container);
 
-  const editor2 = new konnakol.Editor('two');
-  document.body.appendChild(editor2.container);
+  const keyCommand = new konnakol.Editor('keyCommand');
+  keyCommand.setContent('takadimitakajuna');
+  document.getElementById('key-command').appendChild(keyCommand.container);
 </script>
 </html>
