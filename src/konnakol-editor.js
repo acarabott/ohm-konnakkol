@@ -78,4 +78,8 @@
   play() {
     konnakol.play(this.getContent().replace(this.key, ''));
   }
+
+  getHTML() {
+    return this.container;
+  }
 };
