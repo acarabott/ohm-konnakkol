@@ -60,32 +60,83 @@
   </style>
 </head>
 <body>
-<h1>Konnakol</h1>
-
-<div>
-  <div id="basic-play">
-    <p>
-      Syllables and phrases can be written and played with the play button
-    </p>
-
-  </div>
-
-  <div id="key-command">
-    <p>
-      If the text box is focused (click on it to focus) you can also use the keyboard shortcut <span class="code">Command Enter</span> (Mac) <span class="code">Control Enter</span> (Windows / Linux)
-    </p>
-  </div>
-
+<div id="container">
+  <h1>Konnakol</h1>
 </div>
 
 </body>
 <script>
-  const basicPlay = new konnakol.Editor('basic-play-editor');
-  basicPlay.setContent('takadimitakajuna');
-  document.getElementById('basic-play').appendChild(basicPlay.container);
+  function makeExample(id, content, instructions) {
+    const container = document.createElement('div');
+    container.id = id;
+    const paragraph = document.createElement('p');
+    paragraph.innerHTML = instructions;
+    container.appendChild(paragraph);
+    const editor = new konnakol.Editor(`{id}-editor`);
+    editor.setContent(content);
+    container.appendChild(editor.getHTML());
+    return { container, editor };
+  }
 
-  const keyCommand = new konnakol.Editor('keyCommand');
-  keyCommand.setContent('takadimitakajuna');
-  document.getElementById('key-command').appendChild(keyCommand.container);
+  function addExample (id, content, instructions) {
+    const example = makeExample(id, content, instructions);
+    document.getElementById('container').appendChild(example.container);
+    return example;
+  }
+
+  addExample(
+    'basic-play',
+    'takadimitakajuna',
+    'Syllables and phrases can be written and played with the play button'
+  );
+
+  const keyCommand = addExample(
+    'key-command',
+    'takita takita taka',
+    `You can also use a keyboard shortcut:
+    <ol>
+      <li>Click on the textbox</li>
+      <li>Press <span class="code">cmd enter</span> (Mac) <span class="code">ctrl enter</span> (Windows / Linux)</li>
+    </ol>`);
+  keyCommand.editor.playButton.remove();
+
+  const selection = addExample(
+    'selection',
+    `dadiginadom dadiginadom`,
+    'You can play just a part of the text by selecting it'
+  );
+
+  selection.editor.selectionStart = 12;
+  selection.editor.selectionEnd = 23;
+
+  addExample(
+    'syllables',
+    `ma la da ta
+khe khu khi kki
+tha tom tham thi
+tha lang - gu tom`,
+    `You can make up your own syllables
+     <ul>
+       <li>They must start with a consonant</li>
+       <li>There must be one vowel</li>
+       <li>You can have multiple vowels or consonants, e.g. tha or taa</li>
+       <li>Consonants at the end are also ok, as long as there is no vowel after them</li>
+     </ul>`
+  );
+
+  addExample(
+    'rests',
+    `da---di---gi---na---dom---
+da--di--gi--na--dom--
+da-di-gi-na-dom-
+dadiginadom Tom ,
+dadiginadom Tom ,
+dadiginadom Tom
+`,
+    `You can extend a syllable by one akshara with <span class="code">-</span> or <span class="code">,</span>`
+  );
+
+
+
 </script>
 </html>
