@@ -72,20 +72,31 @@
 
 </body>
 <script>
-  function makeExample(id, content, instructions) {
+  function makeExample(id, content, title='', instructions='') {
     const container = document.createElement('div');
     container.id = id;
-    const paragraph = document.createElement('p');
-    paragraph.innerHTML = instructions;
-    container.appendChild(paragraph);
+
+    if (title.length > 0) {
+      const header = document.createElement('h2');
+      header.textContent = title;
+      container.appendChild(header);
+    }
+
+    if (instructions.length > 0) {
+      const paragraph = document.createElement('p');
+      paragraph.innerHTML = instructions;
+      container.appendChild(paragraph);
+    }
+
     const editor = new konnakol.Editor(`{id}-editor`);
     editor.setContent(content);
     container.appendChild(editor.getHTML());
+
     return { container, editor };
   }
 
-  function addExample (id, content, instructions) {
-    const example = makeExample(id, content, instructions);
+  function addExample (id, title, content, instructions) {
+    const example = makeExample(id, title, content, instructions);
     document.getElementById('container').appendChild(example.container);
     return example;
   }
@@ -93,12 +104,14 @@
   addExample(
     'basic-play',
     'takadimitakajuna',
+    'Play button',
     'Syllables and phrases can be written and played with the play button'
   );
 
   const keyCommand = addExample(
     'key-command',
     'takita takita taka',
+    'Keyboard shortcut',
     `You can also use a keyboard shortcut:
     <ol>
       <li>Click on the textbox</li>
@@ -109,6 +122,7 @@
   const selection = addExample(
     'selection',
     `dadiginadom dadiginadom`,
+    'Selection playback',
     'You can play just a part of the text by selecting it'
   );
 
@@ -116,11 +130,20 @@
   selection.editor.selectionEnd = 23;
 
   addExample(
+    'spaces',
+    `taka dimi taka juna
+takita takita taka`,
+    'Whitespace',
+    'spaces and new lines are ignored, so you can format as you like'
+  );
+
+  addExample(
     'syllables',
     `ma la da ta
 khe khu khi kki
 tha tom tham thi
 tha lang - gu tom`,
+    'Syllables',
     `You can make up your own syllables
      <ul>
        <li>They must start with a consonant</li>
@@ -135,12 +158,19 @@ tha lang - gu tom`,
     `da---di---gi---na---dom---
 da--di--gi--na--dom--
 da-di-gi-na-dom-
-dadiginadom Tom ,
-dadiginadom Tom ,
-dadiginadom Tom
-`,
+dadiginadom tom ,
+dadiginadom tom ,
+dadiginadom tom`,
+    'Rests/extensions',
     `You can extend a syllable by one akshara with <span class="code">-</span> or <span class="code">,</span>`
   );
+
+  addExample('rests-2',
+    `takadimi takajuna
+takadimi takajuna
+- dadiginadom dadiginadom dadiginadom
+tom`
+);
 
 
 
