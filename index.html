@@ -10,30 +10,36 @@
   <script src="dst/app.js"></script>
   <style>
     body {
-      font-family: sans-serif;
+      font-family: 'Times New Roman';
+      font-size: 20px;
+      line-height:26px;
+      background-color: #eeeeee;
     }
 
-    .button {
-      border:none;
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Helvetica Neue';
+      font-weight: bold;
+    }
+
+    .konnakol-editor .button {
+      border: none;
       background: #38c0ff;
-      background-image: linear-gradient(to bottom, #38c0ff, #4d63f0);
-      border-radius: 15px;
-      font-family: Arial;
       color: #ffffff;
       font-size: 20px;
+      letter-spacing: 2px;
       padding: 10px 20px 10px 20px;
       text-decoration: none;
     }
 
-    .button:hover {
+    .konnakol-editor .button:hover {
       background: #3cb0fd;
-      background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
       text-decoration: none;
     }
 
-    #text {
+    .konnakol-editor textarea {
       font-size:20px;
       line-height:30px;
+      padding:5px;
     }
 
     .code {
