@@ -234,5 +234,32 @@ Tom`,
     By default the gati is chatusra (4)`
   );
 
+  addExample('repeats',
+    `takadimi x 2`,
+    'Repeats',
+    `Phrases can be repeated by using <span class="code">x N</span> (spaces
+    don't matter, <span class="code">x 3</span> and <span class="code">x 3</span>
+    are both ok`
+  );
+
+  addExample('repeats-parens',
+    `(taka x2 takita) x2`,
+    'Brackets',
+    `Round brackets can be used to disambiguate repeats`
+  );
+
+  addExample('repeats-parens-without',
+    `taka x2 takita x2`,
+    '',
+    `without the brackets this would be: <span class="code">(taka x2) (takita x2)</span>`
+  );
+
+  addExample('homework',
+    `((Takadimi x 7) TakaTakita) x 3
+((Takadimi x 6) TakaTakita) Tom`,
+    '',
+    `This makes it easy to write out exercises like this classic`
+  );
+
 </script>
 </html>
