@@ -15,28 +15,24 @@ g4
 Takadimi Takajuna Takadimi g5 (DadiGinadom DadiGinadom)
 Tom
 </textarea>
-
-<textarea id="text2" cols="100" rows="30">
-/konnakol
-g12 ta x 10
-Tom
-</textarea>
-
-<div>
-  /konnakol
-  takadimi taka
-</div>
-
-
+<input id="button" type="button" value="play">
 </body>
 <script>
   var textarea = document.getElementById('text');
 
+  function play() {
+    konnakol.play(textarea.value.replace('/konnakol', ''));
+  }
+
   textarea.addEventListener('keydown', function (event) {
     if (event.key === "Enter" && event.metaKey) {
-      play(textarea.value.replace('/konnakol', ''));
+      play();
     }
   });
 
+  var button = document.getElementById('button');
+  button.addEventListener('click', function (event) {
+    play();
+  });
 </script>
 </html>
