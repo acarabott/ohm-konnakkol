@@ -1,31 +1,74 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>ohm-konnakol</title>
+  <title>Konnakol</title>
   <script src="node_modules/ohm-js/dist/ohm.js"></script>
   <script src="assets/konnakol.ohm" type="text/ohm-js"></script>
   <script src="dst/audio.js"></script>
   <script src="dst/konnakol.js"></script>
   <script src="dst/app.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+
+    #button {
+      display:block;
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+    }
+  </style>
 </head>
 <body>
+<h1>Konnakol</h1>
+
+<div>
+  <p>
+    Syllables and phrases can be entered in the text box below and played either
+    with the play button
+  </p>
+
+</div>
+
 <textarea id="text" cols="100" rows="30">
-/konnakol
 g4
 Takadimi Takajuna Takadimi g5 (DadiGinadom DadiGinadom)
 Tom
 </textarea>
-<input id="button" type="button" value="play">
+
+<div>
+  <input id="button" type="button" value="Play">
+
+</div>
+
 </body>
 <script>
   var textarea = document.getElementById('text');
+  var content = '';
 
   function play() {
-    konnakol.play(textarea.value.replace('/konnakol', ''));
+    konnakol.play(content.replace('/konnakol', ''));
   }
+
+  var selectionStart = 0;
+  var selectionEnd = 0;
+
+  textarea.addEventListener('focusin', function (event) {
+    event.target.selectionStart = selectionStart;
+    event.target.selectionEnd = selectionEnd;
+  });
+
+  textarea.addEventListener('focusout', function (event) {
+    selectionStart = event.target.selectionStart;
+    selectionEnd = event.target.selectionEnd;
+    content = event.target.value.slice(selectionStart, selectionEnd);
+  });
 
   textarea.addEventListener('keydown', function (event) {
     if (event.key === "Enter" && event.metaKey) {
+      var selection = window.getSelection().toString();
+      content = selection.length > 0 ? selection : textarea.value;
       play();
     }
   });
