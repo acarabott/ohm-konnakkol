@@ -4,6 +4,7 @@
 
     this.container = document.createElement('div');
     this.container.id = id;
+    this.container.classList.add('konnakol-editor');
 
     // text area
     this.selectionStart = 0;
