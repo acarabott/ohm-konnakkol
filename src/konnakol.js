@@ -97,13 +97,16 @@ konnakol.Word = class Word extends konnakol.Chunk {
   }
 };
 
-konnakol.Phrase = class Phrase extends konnakol.Chunk {
-  constructor(chunks) {
-    super(chunks, 1);
+konnakol.Composition = class Composition extends konnakol.Chunk {
+  constructor(tempo=60, chunks) {
+    const speed = tempo / 60;
+    super(chunks, speed);
+    this.tempo = tempo;
+    this.speed = speed;
   }
 
   getDuration() {
-    return super.getDuration(1);
+    return super.getDuration(this.speed);
   }
 
   play(when=0, soundLibrary) {
@@ -158,9 +161,13 @@ konnakol.repeatChunksExp = (chunksExp, repeatExp) => {
 };
 
 konnakol.semantics.addOperation('interpret', {
-  Phrase (chunksExp) {
-    const chunks = chunksExp.interpret();
-    return new konnakol.Phrase(chunksExp.interpret());
+  Composition (tempoExp, phraseExp) {
+    const tempo = tempoExp.interpret()[0];
+    const phrase = phraseExp.interpret();
+    return new konnakol.Composition(tempo, phrase);
+  },
+  Tempo (prefixExp, tempoExp) {
+    return parseInt(tempoExp.sourceString, 10);
   },
   Gati (prefixExp, gatiExp) {
     return parseInt(gatiExp.sourceString, 10);

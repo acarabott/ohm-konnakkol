@@ -1,7 +1,5 @@
 Konnakol {
-  Piece = Tempo? Phrase+
-
-  Phrase = Chunk+
+  Composition = Tempo? Chunk+
 
   Tempo = ("tempo"|"laya") digit+
 
