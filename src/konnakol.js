@@ -240,8 +240,9 @@ konnakol.play = function(input, when=0.2, soundLibraryKey='default') {
   }
 
   const node = konnakol.semantics(result);
-  const phrase = node.interpret();
+  const composition = node.interpret();
   const soundLibrary = konnakol.soundLibraries[soundLibraryKey];
-  phrase.play(when, soundLibrary);
-  return phrase;
+  composition.play(when, soundLibrary);
+  console.log(composition);
+  return composition;
 };
