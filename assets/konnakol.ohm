@@ -1,7 +1,7 @@
 Konnakol {
   Composition = TempoChunk+
 
-  TempoChunk = Tempo? Chunk
+  TempoChunk = Tempo? Chunk+
 
   Tempo = ("tempo"|"laya") digit+
 

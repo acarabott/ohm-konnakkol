@@ -178,9 +178,9 @@ konnakol.semantics.addOperation('interpret', {
   Composition (tempoChunksExp) {
     return new konnakol.Composition(tempoChunksExp.interpret());
   },
-  TempoChunk (tempoExp, chunkExp) {
+  TempoChunk (tempoExp, chunksExp) {
     const tempo = tempoExp.interpret()[0];
-    const subchunks = [chunkExp.interpret()];
+    const subchunks = chunksExp.interpret();
     return new konnakol.TempoChunk(tempo, subchunks);
   },
   Tempo (prefixExp, tempoExp) {
