@@ -2,6 +2,7 @@ var gulp = require('gulp');
 var babel = require('gulp-babel');
 var sourcemaps = require('gulp-sourcemaps');
 var connect = require('gulp-connect');
+var htmlreplace = require('gulp-html-replace');
 
 function babelFactory (src, dst) {
   return function() {
@@ -21,6 +22,19 @@ function babelFactory (src, dst) {
   }
 }
 
+function buildFactory (dst) {
+  return function() {
+    gulp.src(['node_modules/ohm-js/dist/ohm.js'])
+      .pipe(gulp.dest(dst + '/scripts'));
+
+    gulp.src(['dst/*.js'])
+      .pipe(gulp.dest(dst + '/scripts'));
+
+    gulp.src(['assets/**/*'])
+      .pipe(gulp.dest(dst + '/assets'));
+  };
+}
+
 // ohm-konnakol
 gulp.task('babel', babelFactory(['src/*.js'], 'dst'));
 
@@ -33,16 +47,7 @@ gulp.task('watchjs', function() {
 });
 
 // chrome extension
-gulp.task('chrome-build', ['babel'], function() {
-  gulp.src(['node_modules/ohm-js/dist/ohm.js'])
-    .pipe(gulp.dest('chrome/extension/scripts'));
-
-  gulp.src(['dst/*.js'])
-    .pipe(gulp.dest('chrome/extension/scripts'));
-
-  gulp.src(['assets/**/*'])
-    .pipe(gulp.dest('chrome/extension/assets'));
-});
+gulp.task('chrome-build', ['babel'], buildFactory('chrome/extension'));
 
 gulp.task('chrome-babel',
   babelFactory(['chrome/src/*.js'], 'chrome/extension/scripts'));
@@ -50,6 +55,25 @@ gulp.task('chrome-babel',
 gulp.task('chrome-watch', ['connect'], function() {
   gulp.watch(['index.html', 'src/*.js', 'assets/*.ohm', 'chrome/src/*.js'],
     ['babel', 'chrome-build', 'chrome-babel']);
+});
+
+gulp.task('web-build', ['babel'], function() {
+  var dst = '/Volumes/Data/Users/arthurc/Sites/arthurcarabott.com/konnakol';
+  // var dst = 'web';
+
+  buildFactory(dst)();
+
+  gulp.src(['index.html'])
+    .pipe(htmlreplace({
+      js: [
+        'scripts/ohm.js',
+        'scripts/audio.js',
+        'scripts/konnakol.js',
+        'scripts/konnakol-editor.js',
+        'scripts/app.js'
+      ]
+    }))
+    .pipe(gulp.dest(dst));
 });
 
 // default
