@@ -56,21 +56,13 @@ konnakol.addSoundLibraryFromLookup = (name, lookup) => {
   konnakol.addSoundLibrary(name, konnakol.createSoundLibrary(lookup));
 };
 
-konnakol.Chunk = class Chunk {
-  constructor(chunks, speed, gati) {
+konnakol.GenericChunk = class GenericChunk {
+  constructor(chunks, speed=1) {
     this.subchunks = chunks;
     this.speed = speed;
-    this.setGati(gati);
   }
 
-  setGati(gati) {
-    this.gati = gati;
-    if (gati !== undefined) {
-      this.subchunks.forEach(subchunk => subchunk.setGati(gati));
-    }
-  }
-
-  getDuration(speed) {
+  getDuration(speed=1) {
     const sum = this.subchunks.reduce((prev, cur) => {
       return prev + cur.getDuration(speed);
     }, 0);
@@ -91,34 +83,34 @@ konnakol.Chunk = class Chunk {
   }
 };
 
-konnakol.Composition = class Composition extends konnakol.Chunk {
+konnakol.Composition = class Composition extends konnakol.GenericChunk {
   constructor(tempoChunks) {
-    super(tempoChunks, 1);
+    super(tempoChunks);
   }
 
   play(when=0, soundLibrary) {
-    let subchunkWhen = when;
-    this.subchunks.forEach(subchunk => {
-      subchunk.play(subchunkWhen, soundLibrary);
-      subchunkWhen += subchunk.getDuration();
-    });
+    super.play(when, 1, soundLibrary);
   }
 };
 
-konnakol.TempoChunk = class TempoChunk extends konnakol.Chunk {
+konnakol.TempoChunk = class TempoChunk extends konnakol.GenericChunk {
   constructor(tempo=60, chunks) {
     const speed = tempo / 60;
     super(chunks, speed);
     this.tempo = tempo;
     this.speed = speed;
   }
+};
 
-  getDuration() {
-    return super.getDuration(1);
+konnakol.Chunk = class Chunk extends konnakol.GenericChunk {
+  constructor(chunks, speed, gati=4) {
+    super(chunks, speed);
+    this.setGati(gati);
   }
 
-  play(when=0, soundLibrary) {
-    super.play(when, 1, soundLibrary);
+  setGati(gati) {
+    this.gati = gati;
+    this.subchunks.forEach(sub => sub.setGati(gati));
   }
 };
 
@@ -243,6 +235,5 @@ konnakol.play = function(input, when=0.2, soundLibraryKey='default') {
   const composition = node.interpret();
   const soundLibrary = konnakol.soundLibraries[soundLibraryKey];
   composition.play(when, soundLibrary);
-  console.log(composition);
   return composition;
 };
