@@ -59,6 +59,10 @@
       width: 100%;
     }
 
+    .instructions {
+      margin-bottom: 20px;
+    }
+
     .code {
       font-family: Courier;
       background: #dedede;
@@ -73,7 +77,7 @@
 
 </body>
 <script>
-  function makeExample(id, content, title='', instructions='') {
+  function makeExample(id, content, title='', instructionHTML='') {
     const container = document.createElement('div');
     container.id = id;
 
@@ -83,10 +87,11 @@
       container.appendChild(header);
     }
 
-    if (instructions.length > 0) {
-      const paragraph = document.createElement('p');
-      paragraph.innerHTML = instructions;
-      container.appendChild(paragraph);
+    if (instructionHTML.length > 0) {
+      const instructions = document.createElement('div');
+      instructions.innerHTML = instructionHTML;
+      instructions.classList.add('instructions');
+      container.appendChild(instructions);
     }
 
     const editor = new konnakol.Editor(`{id}-editor`);
@@ -96,8 +101,8 @@
     return { container, editor };
   }
 
-  function addExample (id, title, content, instructions) {
-    const example = makeExample(id, title, content, instructions);
+  function addExample (id, content, title, instructionHTML) {
+    const example = makeExample(id, content, title, instructionHTML);
     document.getElementById('container').appendChild(example.container);
     return example;
   }
