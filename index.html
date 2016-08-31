@@ -9,8 +9,12 @@
   <script src="dst/konnakol-editor.js"></script>
   <script src="dst/app.js"></script>
   <style>
-    body {
+
+    body, .code, .konnakol-editor textarea {
       font-family: Palatino;
+    }
+
+    body {
       font-size: 20px;
       line-height:30px;
       background:#ffffff;
@@ -31,7 +35,7 @@
 
     .konnakol-editor {
       margin-bottom: 20px;
-      background: #cccccc;
+      background: #cbcbcb;
       padding: 10px;
     }
 
@@ -50,8 +54,13 @@
       text-decoration: none;
     }
 
+    .code {
+      background: #66cfff;
+      color: #000000;
+      padding:3px 5px;
+    }
+
     .konnakol-editor textarea {
-      font-family: Palatino;
       font-size:20px;
       line-height:30px;
       padding:5px;
@@ -63,11 +72,30 @@
       margin-bottom: 20px;
     }
 
-    .code {
-      font-family: Courier;
-      background: #dedede;
-      padding:3px;
+    table {
+      border-collapse: collapse;
+      border-spacing: 0;
+      empty-cells: show;
+      border: 1px solid #9a9a9a;
     }
+
+    td {
+      padding: 0.5em 1em;
+    }
+
+    tr {
+      border-top: 1px solid #9a9a9a;
+      border-bottom: 1px solid #9a9a9a;
+    }
+
+    tr:nth-child(even) {
+      background-color: #ffffff;
+    }
+
+/*    tr {
+      border-top: 1px black solid;
+    }
+*/
   </style>
 </head>
 <body>
@@ -265,6 +293,55 @@ Tom`,
 ((Takadimi x 6) TakaTakita) Tom`,
     '',
     `This makes it easy to write out exercises like this classic`
+  );
+
+  addExample('free',
+    ``,
+    'Go wild!',
+    `Write your own! All of the examples on this page are editable, so feel free
+    to edit and play with them.
+
+    <table>
+      <tbody>
+        <th>
+        <td>Cheat sheet</td>
+        </th>
+        <tr>
+          <td>Syllables</td>
+          <td>
+            start with a consonant, must have a vowel
+            <span class="code">ta tha tham</span>
+          </td>
+        </tr>
+        <tr>
+          <td>Rest/extension</td>
+          <td><span class="code">-</span> or <span class="code">,</span></td>
+        </tr>
+        <tr>
+          <td>Stresses</td>
+          <td>Upper case <span class="code">TakaTakita</span></td>
+        </tr>
+        <tr>
+          <td>Double Speed</td>
+          <td><span class="code">{ takadimi } {{takadimi}}</span></td>
+        </tr>
+        <tr>
+          <td>Half Speed</td>
+          <td><span class="code">[ takadimi ] [[ takadimi ]]</span></td>
+        </tr>
+        <tr>
+          <td>Gati</td>
+          <td><span class="code">g3 g4 g5</span> etc</td>
+        </tr>
+        <tr>
+          <td>Repeats</td>
+          <td><span class="code">takadimi x2</span> use brackets if necessary
+            <span class="code">(takadimi x 2)</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    `
   );
 
 </script>
