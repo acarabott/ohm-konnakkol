@@ -297,7 +297,7 @@ Tom`,
     `This makes it easy to write out exercises like this classic`
   );
 
-  addExample('free',
+  const free = addExample('free',
     ``,
     'Go wild!',
     `<p>Write your own! All of the examples on this page are editable, so feel
@@ -342,6 +342,8 @@ Tom`,
     </table>
     `
   );
+
+  free.editor.textarea.rows = 8;
 
 </script>
 </html>
