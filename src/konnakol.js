@@ -91,9 +91,17 @@ konnakol.Chunk = class Chunk {
   }
 };
 
-konnakol.Word = class Word extends konnakol.Chunk {
-  constructor(syllables, speed, gati) {
-    super(syllables, speed, gati);
+konnakol.Composition = class Composition extends konnakol.Chunk {
+  constructor(tempoChunks) {
+    super(tempoChunks, 1);
+  }
+
+  play(when=0, soundLibrary) {
+    let subchunkWhen = when;
+    this.subchunks.forEach(subchunk => {
+      subchunk.play(subchunkWhen, soundLibrary);
+      subchunkWhen += subchunk.getDuration();
+    });
   }
 };
 
@@ -114,17 +122,9 @@ konnakol.TempoChunk = class TempoChunk extends konnakol.Chunk {
   }
 };
 
-konnakol.Composition = class Composition extends konnakol.Chunk {
-  constructor(tempoChunks) {
-    super(tempoChunks, 1);
-  }
-
-  play(when=0, soundLibrary) {
-    let subchunkWhen = when;
-    this.subchunks.forEach(subchunk => {
-      subchunk.play(subchunkWhen, soundLibrary);
-      subchunkWhen += subchunk.getDuration();
-    });
+konnakol.Word = class Word extends konnakol.Chunk {
+  constructor(syllables, speed, gati) {
+    super(syllables, speed, gati);
   }
 };
 
