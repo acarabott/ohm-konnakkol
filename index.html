@@ -76,7 +76,8 @@
       border-collapse: collapse;
       border-spacing: 0;
       empty-cells: show;
-      border: 1px solid #9a9a9a;
+      border: 2px solid #9a9a9a;
+      width: 100%;
     }
 
     td {
@@ -92,10 +93,11 @@
       background-color: #ffffff;
     }
 
-/*    tr {
-      border-top: 1px black solid;
+    td:first-child {
+      font-weight:bold;
+      padding-right: 20px;
     }
-*/
+
   </style>
 </head>
 <body>
@@ -298,14 +300,11 @@ Tom`,
   addExample('free',
     ``,
     'Go wild!',
-    `Write your own! All of the examples on this page are editable, so feel free
-    to edit and play with them.
+    `<p>Write your own! All of the examples on this page are editable, so feel
+    free to edit and play with them too.</p>
 
     <table>
       <tbody>
-        <th>
-        <td>Cheat sheet</td>
-        </th>
         <tr>
           <td>Syllables</td>
           <td>
@@ -331,7 +330,7 @@ Tom`,
         </tr>
         <tr>
           <td>Gati</td>
-          <td><span class="code">g3 g4 g5</span> etc</td>
+          <td><span class="code">g3 g4 g5</span> etc...</td>
         </tr>
         <tr>
           <td>Repeats</td>
