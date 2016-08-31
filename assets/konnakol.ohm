@@ -1,5 +1,7 @@
 Konnakol {
-  Composition = Tempo? Chunk+
+  Composition = TempoChunk+
+
+  TempoChunk = Tempo? Chunk
 
   Tempo = ("tempo"|"laya") digit+
 
@@ -7,7 +9,7 @@ Konnakol {
 
   Repeat = ("*" | "x") digit+
 
-  Chunk = Gati? (ChunkDouble | ChunkHalf | word)+ Repeat? --normal
+  Chunk = Gati? (ChunkDouble | ChunkHalf | (~Tempo word))+ Repeat? --normal
      | Gati? "(" Chunk+ ")" Repeat? --paren
 
   ChunkDouble =

@@ -97,7 +97,7 @@ konnakol.Word = class Word extends konnakol.Chunk {
   }
 };
 
-konnakol.Composition = class Composition extends konnakol.Chunk {
+konnakol.TempoChunk = class TempoChunk extends konnakol.Chunk {
   constructor(tempo=60, chunks) {
     const speed = tempo / 60;
     super(chunks, speed);
@@ -106,11 +106,25 @@ konnakol.Composition = class Composition extends konnakol.Chunk {
   }
 
   getDuration() {
-    return super.getDuration(this.speed);
+    return super.getDuration(1);
   }
 
   play(when=0, soundLibrary) {
     super.play(when, 1, soundLibrary);
+  }
+};
+
+konnakol.Composition = class Composition extends konnakol.Chunk {
+  constructor(tempoChunks) {
+    super(tempoChunks, 1);
+  }
+
+  play(when=0, soundLibrary) {
+    let subchunkWhen = when;
+    this.subchunks.forEach(subchunk => {
+      subchunk.play(subchunkWhen, soundLibrary);
+      subchunkWhen += subchunk.getDuration();
+    });
   }
 };
 
@@ -161,10 +175,13 @@ konnakol.repeatChunksExp = (chunksExp, repeatExp) => {
 };
 
 konnakol.semantics.addOperation('interpret', {
-  Composition (tempoExp, phraseExp) {
+  Composition (tempoChunksExp) {
+    return new konnakol.Composition(tempoChunksExp.interpret());
+  },
+  TempoChunk (tempoExp, chunkExp) {
     const tempo = tempoExp.interpret()[0];
-    const phrase = phraseExp.interpret();
-    return new konnakol.Composition(tempo, phrase);
+    const subchunks = [chunkExp.interpret()];
+    return new konnakol.TempoChunk(tempo, subchunks);
   },
   Tempo (prefixExp, tempoExp) {
     return parseInt(tempoExp.sourceString, 10);
