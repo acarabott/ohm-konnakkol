@@ -3,7 +3,7 @@ Konnakol {
 
   TempoChunk = Tempo? Chunk+
 
-  Tempo = ("tempo"|"laya") digit+
+  Tempo = ("tempo"|"kala") digit+
 
   Gati = "g" digit+
 
