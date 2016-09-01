@@ -17,7 +17,7 @@ chrome.browserAction.onClicked.addListener(tab => {
 
 chrome.runtime.onConnect.addListener(port => {
   port.onMessage.addListener((message, sender, sendResponse) => {
-    konnakol.play(message);
+    konnakkol.play(message);
   });
 });
 
@@ -27,17 +27,17 @@ const menuOptions = [
   {
     args: {
       id: 'play',
-      title: 'Konnakol: Play Selection',
+      title: 'Konnakkol: Play Selection',
       contexts: ['selection']
     },
     action: (info, tab) => {
-      konnakol.play(info.selectionText);
+      konnakkol.play(info.selectionText);
     }
   },
   {
     args: {
       id: 'parse',
-      title: 'Konnakol - add play buttons',
+      title: 'Konnakkol - add play buttons',
       contexts: ['page']
     },
     action: (info, tab) => {

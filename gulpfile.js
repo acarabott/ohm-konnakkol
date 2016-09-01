@@ -35,7 +35,7 @@ function buildFactory (dst) {
   };
 }
 
-// ohm-konnakol
+// ohm-konnakkol
 gulp.task('babel', babelFactory(['src/*.js'], 'dst'));
 
 gulp.task('connect', function() {
@@ -58,7 +58,7 @@ gulp.task('chrome-watch', ['connect'], function() {
 });
 
 gulp.task('web-build', ['babel'], function() {
-  var dst = '/Volumes/Data/Users/arthurc/Sites/arthurcarabott.com/konnakol';
+  var dst = '/Volumes/Data/Users/arthurc/Sites/arthurcarabott.com/konnakkol';
   // var dst = 'web';
 
   buildFactory(dst)();
@@ -68,8 +68,8 @@ gulp.task('web-build', ['babel'], function() {
       js: [
         'scripts/ohm.js',
         'scripts/audio.js',
-        'scripts/konnakol.js',
-        'scripts/konnakol-editor.js',
+        'scripts/konnakkol.js',
+        'scripts/konnakkol-editor.js',
         'scripts/app.js'
       ]
     }))

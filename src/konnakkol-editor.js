@@ -1,10 +1,10 @@
- konnakol.Editor = class Editor {
+ konnakkol.Editor = class Editor {
   constructor(id) {
-    this.key = '/konnakol';
+    this.key = '/konnakkol';
 
     this.container = document.createElement('div');
     this.container.id = id;
-    this.container.classList.add('konnakol-editor');
+    this.container.classList.add('konnakkol-editor');
 
     // text area
     this.selectionStart = 0;
@@ -75,7 +75,7 @@
   }
 
   play() {
-    konnakol.play(this.getContent().replace(this.key, ''));
+    konnakkol.play(this.getContent().replace(this.key, ''));
   }
 
   getHTML() {

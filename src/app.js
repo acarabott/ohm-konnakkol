@@ -33,7 +33,7 @@ function setup() {
   });
 
   return Promise.all(soundFilePromises).then(() => {
-    konnakol.addSoundLibraryFromLookup('default', soundLibraryLookup);
+    konnakkol.addSoundLibraryFromLookup('default', soundLibraryLookup);
   });
 }
 

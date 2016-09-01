@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
-  "name": "Konnakol",
+  "name": "Konnakkol",
   "version": "0.0.1",
 
-  "description": "Play Konnakol on the web!",
+  "description": "Play Konnakkol on the web!",
   "icons": {
     "16": "images/icon16.png",
     "48": "images/icon48.png",
@@ -15,7 +15,7 @@
       "19": "images/icon19.png",
       "38": "images/icon38.png"
     },
-    "default_title": "Konnakol"
+    "default_title": "Konnakkol"
     // "default_popup": "popup.html"
   },
 
@@ -26,7 +26,7 @@
     "persistent": false
   },
 
-  "homepage_url": "https://github.com/acarabott/ohm-konnakol",
+  "homepage_url": "https://github.com/acarabott/ohm-konnakkol",
   "incognito": "split",
   "minimum_chrome_version": "50",
   "permissions": [

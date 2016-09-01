@@ -1,25 +1,25 @@
 {
-  "name": "konnakol",
+  "name": "konnakkol",
   "version": "0.0.1",
-  "description": "konnakol parsing in ohm",
+  "description": "konnakkol parsing in ohm",
   "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/acarabott/ohm-konnakol.git"
+    "url": "git+https://github.com/acarabott/ohm-konnakkol.git"
   },
   "keywords": [
     "ohm",
-    "konnakol"
+    "konnakkol"
   ],
   "author": "Arthur Carabott",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/acarabott/ohm-konnakol/issues"
+    "url": "https://github.com/acarabott/ohm-konnakkol/issues"
   },
-  "homepage": "https://github.com/acarabott/ohm-konnakol#readme",
+  "homepage": "https://github.com/acarabott/ohm-konnakkol#readme",
   "devDependencies": {
     "babel-preset-es2015": "^6.13.2",
     "gulp": "^3.9.1",

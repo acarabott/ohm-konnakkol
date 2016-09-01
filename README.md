@@ -1,8 +1,8 @@
-# Konnakol - Ohm
+# Konnakkol - Ohm
 
-Parsing [Konnakol](https://en.wikipedia.org/wiki/Konnakol) (south indian rhythm language) with [Ohm](https://github.com/cdglabs/ohm)
+Parsing [Konnakkol](https://en.wikipedia.org/wiki/Konnakkol) (south indian rhythm language) with [Ohm](https://github.com/cdglabs/ohm)
 
-The goal is to be able to play (as audio) Konnakol written on the web. 
+The goal is to be able to play (as audio) Konnakkol written on the web. 
 
 ## Future work
 

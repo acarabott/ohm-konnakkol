@@ -1,11 +1,11 @@
 const port = chrome.runtime.connect();
 
-// this should live in a konnakol parser module
-const key = '/konnakol';
-const buttonClass = 'konnakol-play-button';
+// this should live in a konnakkol parser module
+const key = '/konnakkol';
+const buttonClass = 'konnakkol-play-button';
 const buttons = [];
 
-function hasKonnakolKey(node) {
+function hasKonnakkolKey(node) {
   return (typeof node.value === 'string' && node.value.includes(key)) ||
           node.textContent.includes(key);
 }
@@ -35,12 +35,12 @@ function createPlayButtonFor(node, buttonAction) {
   }
 }
 
-function getKonnakolNodes(parent=document.body) {
+function getKonnakkolNodes(parent=document.body) {
   return Array.from(parent.querySelectorAll('*'))
     .filter(node => {
       return node.tagName.toUpperCase() !== 'SCRIPT' && // no scripts
              node.children.length === 0 &&              // no parent nodes
-             hasKonnakolKey(node);                      // has the key we want
+             hasKonnakkolKey(node);                      // has the key we want
     });
 }
 
@@ -57,10 +57,10 @@ function removePlayButtons() {
 
 function parse(parent, buttonAction) {
   removePlayButtons();
-  addPlayButtons(getKonnakolNodes(parent), buttonAction);
+  addPlayButtons(getKonnakkolNodes(parent), buttonAction);
 }
 
-// end of konnakol parser module
+// end of konnakkol parser module
 
 // 'main'
 const parent = document.body;

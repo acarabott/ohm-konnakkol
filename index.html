@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Konnakol</title>
-  <script src="assets/konnakol.ohm" type="text/ohm-js"></script>
+  <title>Konnakkol</title>
+  <script src="assets/konnakkol.ohm" type="text/ohm-js"></script>
   <!-- build:js -->
   <script src="node_modules/ohm-js/dist/ohm.js"></script>
   <script src="dst/audio.js"></script>
-  <script src="dst/konnakol.js"></script>
-  <script src="dst/konnakol-editor.js"></script>
+  <script src="dst/konnakkol.js"></script>
+  <script src="dst/konnakkol-editor.js"></script>
   <script src="dst/app.js"></script>
   <!-- endbuild -->
   <style>
 
-    body, .code, .konnakol-editor textarea {
+    body, .code, .konnakkol-editor textarea {
       font-family: Palatino;
     }
 
@@ -35,13 +35,13 @@
       font-weight: bold;
     }
 
-    .konnakol-editor {
+    .konnakkol-editor {
       margin-bottom: 20px;
       background: #cbcbcb;
       padding: 10px;
     }
 
-    .konnakol-editor .button {
+    .konnakkol-editor .button {
       border: none;
       background: #38c0ff;
       color: #ffffff;
@@ -51,7 +51,7 @@
       text-decoration: none;
     }
 
-    .konnakol-editor .button:hover {
+    .konnakkol-editor .button:hover {
       background: #3cb0fd;
       text-decoration: none;
     }
@@ -62,7 +62,7 @@
       padding:3px 5px;
     }
 
-    .konnakol-editor textarea {
+    .konnakkol-editor textarea {
       font-size:20px;
       line-height:30px;
       padding:5px;
@@ -104,7 +104,7 @@
 </head>
 <body>
 <div id="container">
-  <h1>Konnakol</h1>
+  <h1>Konnakkol</h1>
 </div>
 
 </body>
@@ -126,7 +126,7 @@
       container.appendChild(instructions);
     }
 
-    const editor = new konnakol.Editor(`${id}-editor`);
+    const editor = new konnakkol.Editor(`${id}-editor`);
     editor.setContent(content);
     container.appendChild(editor.getHTML());
 
@@ -227,7 +227,7 @@ Takadimi takaJuna
     `Takadimi {Takadimi Takajuna} Tham`,
     'Double speed',
     `Use <span class="code">{</span> and <span class="code">}</span> around your
-    konnakol to double the speed`
+    konnakkol to double the speed`
   );
 
   addExample('multi-double',
