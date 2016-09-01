@@ -4,6 +4,7 @@ const konnakol = {};
 konnakol.grammar = ohm.grammarFromScriptElement();
 konnakol.semantics = konnakol.grammar.createSemantics();
 konnakol.soundLibraries = {};
+konnakol.defaultGati = 4;
 
 konnakol.createSoundLibrary = (lookup) => {
   if (!lookup.hasOwnProperty('default')) {
@@ -129,7 +130,7 @@ konnakol.TempoChunk = class TempoChunk extends konnakol.ContainerChunk {
 };
 
 konnakol.Chunk = class Chunk extends konnakol.GenericChunk {
-  constructor(chunks, speed, gati=4) {
+  constructor(chunks, speed, gati=konnakol.defaultGati) {
     super(chunks, speed);
     this.setGati(gati);
   }
@@ -210,7 +211,9 @@ konnakol.semantics.addOperation('interpret', {
     return parseInt(tempoExp.sourceString, 10);
   },
   Gati (prefixExp, gatiExp) {
-    return parseInt(gatiExp.sourceString, 10);
+    const gati = parseInt(gatiExp.sourceString, 10);
+    konnakol.defaultGati = gati;
+    return gati;
   },
   Repeat (operatorExp, mulExp) {
     return parseInt(mulExp.sourceString, 10);
