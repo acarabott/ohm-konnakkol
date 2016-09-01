@@ -13,6 +13,7 @@
     this.textarea = document.createElement('textarea');
     this.textarea.rows = 2;
     this.textarea.cols = 80;
+    this.textarea.spellcheck = false;
 
     this.textarea.addEventListener('focusin', event => {
       event.target.selectionStart = this.selectionStart;
