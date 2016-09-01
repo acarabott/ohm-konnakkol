@@ -164,7 +164,8 @@ konnakkol.Syllable = class Syllable {
 
   play(when=0, speedCount, soundLibrary=konnakkol.soundLibraries.default) {
     const buffer = soundLibrary.get(this.syllable.toLowerCase(), this.type);
-    audio.playSample(buffer, when);
+    const mul = this.type === 'stress' ? 1.0 : 0.6;
+    audio.playSample(buffer, when, mul);
   }
 
   toString() {
