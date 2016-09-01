@@ -93,7 +93,17 @@ konnakol.ContainerChunk = class ContainerChunk extends konnakol.GenericChunk {
   }
 };
 
-konnakol.Composition = class Composition extends konnakol.ContainerChunk {};
+konnakol.Composition = class Composition extends konnakol.ContainerChunk {
+  constructor(tempoChunks, tala) {
+    super(tempoChunks);
+    this.tala = tala;
+  }
+
+  play(when=0, soundLibrary, playTala) {
+    playTala = this.tala !== undefined; // TODO temp! for when tala implemented
+    super.play(when, soundLibrary, playTala);
+  }
+};
 
 konnakol.TempoChunk = class TempoChunk extends konnakol.ContainerChunk {
   constructor(tempo=60, chunks) {
@@ -183,8 +193,13 @@ konnakol.repeatChunksExp = (chunksExp, repeatExp) => {
 };
 
 konnakol.semantics.addOperation('interpret', {
-  Composition (tempoChunksExp) {
-    return new konnakol.Composition(tempoChunksExp.interpret());
+  Composition (talaExp, tempoChunksExp) {
+    const tala = talaExp.interpret()[0];
+    return new konnakol.Composition(tempoChunksExp.interpret(), tala);
+  },
+  Tala (nameExp, talaExp) {
+    // TODO this should create a real Tala object! with proper playback!
+    return true;
   },
   TempoChunk (tempoExp, chunksExp) {
     const tempo = tempoExp.interpret()[0];
