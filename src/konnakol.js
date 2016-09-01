@@ -70,10 +70,14 @@ konnakol.GenericChunk = class GenericChunk {
     return sum / this.speed;
   }
 
-  play(when=0, speed, soundLibrary) {
+  play(when=0, speed, soundLibrary, playTala) {
     let subchunkWhen = when;
     this.subchunks.forEach(subchunk => {
-      subchunk.play(subchunkWhen, speed * this.speed, soundLibrary);
+      const isContainer = subchunk instanceof konnakol.ContainerChunk;
+      const firstArg = isContainer ? soundLibrary : speed * this.speed;
+      const secondArg = isContainer ? playTala : soundLibrary;
+
+      subchunk.play(subchunkWhen, firstArg, secondArg);
       subchunkWhen += subchunk.getDuration(this.speed) / speed;
     });
   }
@@ -83,17 +87,15 @@ konnakol.GenericChunk = class GenericChunk {
   }
 };
 
-konnakol.Composition = class Composition extends konnakol.GenericChunk {
-  constructor(tempoChunks) {
-    super(tempoChunks);
-  }
-
-  play(when=0, soundLibrary) {
-    super.play(when, 1, soundLibrary);
+konnakol.ContainerChunk = class ContainerChunk extends konnakol.GenericChunk {
+  play(when=0, soundLibrary, playTala=false) {
+    super.play(when, 1, soundLibrary, playTala);
   }
 };
 
-konnakol.TempoChunk = class TempoChunk extends konnakol.GenericChunk {
+konnakol.Composition = class Composition extends konnakol.ContainerChunk {};
+
+konnakol.TempoChunk = class TempoChunk extends konnakol.ContainerChunk {
   constructor(tempo=60, chunks) {
     const speed = tempo / 60;
     super(chunks, speed);
@@ -101,8 +103,18 @@ konnakol.TempoChunk = class TempoChunk extends konnakol.GenericChunk {
     this.speed = speed;
   }
 
-  play(when=0, speedCount, soundLibrary) {
-    super.play(when, speedCount, soundLibrary);
+  play(when=0, soundLibrary, playTala=false) {
+    super.play(when, soundLibrary);
+
+    if (playTala) {
+      const numBeats = Math.ceil(this.getDuration() * this.speed);
+      const beatDur = 1 / this.speed;
+      const buffer = soundLibrary.get('clap');
+      for (let i = 0; i < numBeats; i++) {
+        const talaWhen = when + (i * beatDur);
+        audio.playSample(buffer, talaWhen, 0.5);
+      }
+    }
   }
 };
 
@@ -238,6 +250,7 @@ konnakol.play = function(input, when=0.2, soundLibraryKey='default') {
   const node = konnakol.semantics(result);
   const composition = node.interpret();
   const soundLibrary = konnakol.soundLibraries[soundLibraryKey];
-  composition.play(when, soundLibrary);
+  const playTala = true;
+  composition.play(when, soundLibrary, playTala);
   return composition;
 };

@@ -14,7 +14,8 @@ function setup() {
     na: { normal: 'na.mp3', stress: 'nam.mp3' },
     nam: { normal: 'nam.mp3' },
     ta: { normal: 'ta.mp3', stress: 'ta2.mp3'},
-    tom: { normal: 'toms.mp3', stress: 'tom.mp3' }
+    tom: { normal: 'toms.mp3', stress: 'tom.mp3' },
+    clap: { normal: 'clap.mp3' }
   };
   const soundLibraryLookup = { default: {} };
   const soundFilePromises = Object.keys(audioFiles).map(strokeKey => {
