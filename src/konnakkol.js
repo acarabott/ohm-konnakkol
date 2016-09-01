@@ -95,13 +95,13 @@ konnakkol.ContainerChunk = class ContainerChunk extends konnakkol.GenericChunk {
 };
 
 konnakkol.Composition = class Composition extends konnakkol.ContainerChunk {
-  constructor(tempoChunks, tala) {
+  constructor(tempoChunks, thala) {
     super(tempoChunks);
-    this.tala = tala;
+    this.thala = thala;
   }
 
   play(when=0, soundLibrary, playTala) {
-    playTala = this.tala !== undefined; // TODO temp! for when tala implemented
+    playTala = this.thala !== undefined; // TODO temp! for when thala implemented
     super.play(when, soundLibrary, playTala);
   }
 };
@@ -122,8 +122,8 @@ konnakkol.TempoChunk = class TempoChunk extends konnakkol.ContainerChunk {
       const beatDur = 1 / this.speed;
       const buffer = soundLibrary.get('clap');
       for (let i = 0; i < numBeats; i++) {
-        const talaWhen = when + (i * beatDur);
-        audio.playSample(buffer, talaWhen, 0.5);
+        const thalaWhen = when + (i * beatDur);
+        audio.playSample(buffer, thalaWhen, 0.5);
       }
     }
   }
@@ -195,12 +195,12 @@ konnakkol.repeatChunksExp = (chunksExp, repeatExp) => {
 };
 
 konnakkol.semantics.addOperation('interpret', {
-  Composition (talaExp, tempoChunksExp) {
-    const tala = talaExp.interpret()[0];
-    return new konnakkol.Composition(tempoChunksExp.interpret(), tala);
+  Composition (thalaExp, tempoChunksExp) {
+    const thala = thalaExp.interpret()[0];
+    return new konnakkol.Composition(tempoChunksExp.interpret(), thala);
   },
-  Tala (nameExp, talaExp) {
-    // TODO this should create a real Tala object! with proper playback!
+  thala (nameExp, tExp, hExp, alaExp, mExp) {
+    // TODO this should create a real thala object! with proper playback!
     return true;
   },
   TempoChunk (tempoExp, chunksExp) {
