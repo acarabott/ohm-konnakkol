@@ -1,5 +1,10 @@
 Konnakol {
-  Composition = TempoChunk+
+  Composition = Tala? TempoChunk+
+
+  // TODO: temp!
+  // stage 1: list of common talas
+  // stage 2: separate grammar for constructing with Anga notation IOII etc...
+  Tala = ("adi" | "rupaka")? ("tala" | "talam")
 
   TempoChunk = Tempo? Chunk+
 
