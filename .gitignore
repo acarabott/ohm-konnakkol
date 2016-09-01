@@ -1,4 +1,5 @@
 # project specific
+assets/audio/
 chrome/extension/scripts/
 chrome/extension/assets/
 materials
