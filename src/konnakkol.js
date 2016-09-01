@@ -71,16 +71,25 @@ konnakkol.GenericChunk = class GenericChunk {
     return sum / this.speed;
   }
 
-  play(when=0, speed, soundLibrary, playTala) {
+  play(when=0, speed, soundLibrary, playTala, onended) {
     let subchunkWhen = when;
-    this.subchunks.forEach(subchunk => {
+    this.subchunks.forEach((subchunk, i) => {
       const isContainer = subchunk instanceof konnakkol.ContainerChunk;
       const firstArg = isContainer ? soundLibrary : speed * this.speed;
       const secondArg = isContainer ? playTala : soundLibrary;
+      const onended = i === this.subchunks.length - 1 ? onended : undefined;
 
-      subchunk.play(subchunkWhen, firstArg, secondArg);
+      subchunk.play(subchunkWhen, firstArg, secondArg, onended);
       subchunkWhen += subchunk.getDuration(this.speed) / speed;
     });
+  }
+
+  stop() {
+    this.subchunks.forEach(subchunk => subchunk.stop());
+  }
+
+  isPlaying() {
+    return this.subchunks.some(subchunk => subchunk.isPlaying());
   }
 
   toString() {
@@ -89,8 +98,8 @@ konnakkol.GenericChunk = class GenericChunk {
 };
 
 konnakkol.ContainerChunk = class ContainerChunk extends konnakkol.GenericChunk {
-  play(when=0, soundLibrary, playTala=false) {
-    super.play(when, 1, soundLibrary, playTala);
+  play(when=0, soundLibrary, playTala=false, onended) {
+    super.play(when, 1, soundLibrary, playTala, onended);
   }
 };
 
@@ -100,9 +109,9 @@ konnakkol.Composition = class Composition extends konnakkol.ContainerChunk {
     this.thala = thala;
   }
 
-  play(when=0, soundLibrary, playTala) {
+  play(when=0, soundLibrary, playTala, onended) {
     playTala = this.thala !== undefined; // TODO temp! for when thala implemented
-    super.play(when, soundLibrary, playTala);
+    super.play(when, soundLibrary, playTala, onended);
   }
 };
 
@@ -114,8 +123,8 @@ konnakkol.TempoChunk = class TempoChunk extends konnakkol.ContainerChunk {
     this.speed = speed;
   }
 
-  play(when=0, soundLibrary, playTala=false) {
-    super.play(when, soundLibrary);
+  play(when=0, soundLibrary, playTala=false, onended) {
+    super.play(when, soundLibrary, playTala, onended);
 
     if (playTala) {
       const numBeats = Math.ceil(this.getDuration() * this.speed);
@@ -141,9 +150,15 @@ konnakkol.Chunk = class Chunk extends konnakkol.GenericChunk {
   }
 };
 
+// TODO unnecessary? >_<
 konnakkol.Word = class Word extends konnakkol.Chunk {
   constructor(syllables, speed, gati) {
     super(syllables, speed, gati);
+  }
+
+  // TODO unnecessary?
+  play(when=0, speed, soundLibrary, playTala, onended) {
+    super.play(when, speed, soundLibrary, playTala, onended);
   }
 };
 
@@ -152,6 +167,8 @@ konnakkol.Syllable = class Syllable {
     this.type = type;
     this.syllable = syllable;
     this.gati = gati;
+    this._isPlaying = false;
+    this.audioNode;
   }
 
   setGati(gati) {
@@ -162,10 +179,29 @@ konnakkol.Syllable = class Syllable {
     return (1 / this.gati) / speed;
   }
 
-  play(when=0, speedCount, soundLibrary=konnakkol.soundLibraries.default) {
+  play(when=0, speedCount, soundLibrary=konnakkol.soundLibraries.default, onended) {
+    this._isPlaying = true;
+
     const buffer = soundLibrary.get(this.syllable.toLowerCase(), this.type);
     const mul = this.type === 'stress' ? 1.0 : 0.6;
-    audio.playSample(buffer, when, mul);
+
+    this.audioNode = audio.playSample(buffer, when, mul, () => {
+      this._isPlaying = false;
+      console.log("onended:", onended);
+      if (onended !== undefined) {
+        onended();
+      }
+    });
+  }
+
+  stop() {
+    if (this.isPlaying) {
+      this.audioNode.stop();
+    }
+  }
+
+  isPlaying() {
+    return this._isPlaying;
   }
 
   toString() {
@@ -185,13 +221,14 @@ konnakkol.Silence = class Silence extends konnakkol.Syllable {
 };
 
 konnakkol.repeatChunksExp = (chunksExp, repeatExp) => {
-  const originalSubchunks = chunksExp.interpret();
   let numRepeats = repeatExp.interpret()[0];
   numRepeats = numRepeats === undefined ? 1 : numRepeats;
-  const numSubchunks = numRepeats * originalSubchunks.length;
-  return Array.from(Array(numSubchunks)).map((x, i) => {
-    return originalSubchunks[i % originalSubchunks.length];
-  });
+
+  let repeatedChunks = [];
+  for (let i = 0; i < numRepeats; i++) {
+    repeatedChunks = repeatedChunks.concat(chunksExp.interpret());
+  }
+  return repeatedChunks;
 };
 
 konnakkol.semantics.addOperation('interpret', {
@@ -260,16 +297,20 @@ konnakkol.semantics.addOperation('interpret', {
   }
 });
 
-konnakkol.play = function(input, when=0.2, soundLibraryKey='default') {
+konnakkol.play = function(input, when=0.2, onended, soundLibraryKey='default') {
   const result = konnakkol.grammar.match(input);
   if (result.failed()) {
     throw Error(`Parsing failed, bad input!\n${result.message}`);
   }
-
+  if (when < 0.2) {
+    when = 0.2;
+    console.log(`warning: 'when' has been set to 0.2 to ensure good sequencing`);
+  }
   const node = konnakkol.semantics(result);
   const composition = node.interpret();
   const soundLibrary = konnakkol.soundLibraries[soundLibraryKey];
   const playTala = true;
   composition.play(when, soundLibrary, playTala);
+  window.c = composition;
   return composition;
 };

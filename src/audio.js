@@ -29,7 +29,7 @@ audio.loadAudio = (url) => {
   });
 };
 
-audio.playSample = (buffer, when=0, mul=1) => {
+audio.createSample = (buffer, mul=1, onended) => {
   const source = audio.ctx.createBufferSource();
   source.buffer = buffer;
 
@@ -38,5 +38,19 @@ audio.playSample = (buffer, when=0, mul=1) => {
 
   source.connect(gain);
   gain.connect(audio.ctx.destination);
+
+  source.onended = onended;
+
+  return source;
+};
+
+
+audio.playSample = (buffer, when=0, mul=1, onended) => {
+  console.log("buffer:", buffer);
+  console.log("when:", when);
+  console.log("mul:", mul);
+  console.log("onended:", onended);
+  const source = audio.createSample(buffer, mul, onended);
   source.start(audio.ctx.currentTime + when);
+  return source;
 };
