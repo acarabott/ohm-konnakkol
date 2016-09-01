@@ -18,16 +18,16 @@ audio.loadResource = (url, responseType="") => {
     };
     request.send();
   });
-}
+};
 
 audio.loadAudio = (url) => {
   return audio.loadResource(url, 'arraybuffer').then(buffer => {
     return audio.ctx.decodeAudioData(buffer,
       decodedBuffer => decodedBuffer,
       error => error
-    )
+    );
   });
-}
+};
 
 audio.playSample = (buffer, when=0, mul=1) => {
   const source = audio.ctx.createBufferSource();
@@ -39,4 +39,4 @@ audio.playSample = (buffer, when=0, mul=1) => {
   source.connect(gain);
   gain.connect(audio.ctx.destination);
   source.start(audio.ctx.currentTime + when);
-}
+};
