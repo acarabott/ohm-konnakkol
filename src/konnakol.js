@@ -100,6 +100,10 @@ konnakol.TempoChunk = class TempoChunk extends konnakol.GenericChunk {
     this.tempo = tempo;
     this.speed = speed;
   }
+
+  play(when=0, speedCount, soundLibrary) {
+    super.play(when, speedCount, soundLibrary);
+  }
 };
 
 konnakol.Chunk = class Chunk extends konnakol.GenericChunk {
