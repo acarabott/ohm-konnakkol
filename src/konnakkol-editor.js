@@ -24,7 +24,10 @@
     });
 
     this.textarea.addEventListener('keydown', event => {
-      if (event.key === 'Enter' && event.metaKey) {
+      const goodMod = ['metaKey', 'ctrlKey'].some(k => event[k]);
+      const enter = event.key === 'Enter';
+
+      if (goodMod && enter) {
         this.play();
       }
     });
