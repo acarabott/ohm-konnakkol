@@ -72,7 +72,7 @@
     const contentRows = this.textarea.value
                             .split('')
                             .filter(c => c === '\n').length + 1;
-    this.textarea.rows = Math.max(Math.max(contentRows, this.textarea.rows), 2);
+    this.textarea.rows = Math.max(contentRows, 2);
   }
 
   getContent() {
