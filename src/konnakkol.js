@@ -72,16 +72,18 @@ konnakkol.GenericChunk = class GenericChunk {
   }
 
   // this as separate method so that it can be overwritten by Word
-  playSubchunk(subchunk, opts, isLast) {
-    subchunk.play(opts);
-    opts.when += subchunk.getDuration(this.speed) / opts.speed;
+  playSubchunk(subchunk, when, opts, isLast) {
+    subchunk.play(when, opts);
   }
 
-  play(opts={when:0}) {
+  play(when=0, opts) {
     opts.speed *= this.speed;
+
+    let nextWhen = when;
     this.subchunks.forEach((sub, i) => {
       const isLast = i === this.subchunks.length - 1;
-      this.playSubchunk(sub, opts, isLast);
+      this.playSubchunk(sub, nextWhen, opts, isLast);
+      nextWhen += sub.getDuration(this.speed) / opts.speed;
     });
   }
 
@@ -99,9 +101,9 @@ konnakkol.GenericChunk = class GenericChunk {
 };
 
 konnakkol.ContainerChunk = class ContainerChunk extends konnakkol.GenericChunk {
-  play(opts={when:0, playTala:false}) {
+  play(when=0, opts={playTala:false}) {
     opts.speed = 1;
-    super.play(opts);
+    super.play(when, opts);
   }
 };
 
@@ -112,9 +114,9 @@ konnakkol.Composition = class Composition extends konnakkol.ContainerChunk {
     this.speed = 1;
   }
 
-  play(opts={when:0}) {
+  play(when=0, opts) {
     opts.playTala = this.thala !== undefined; // TODO temp! for when thala implemented
-    super.play(opts);
+    super.play(when, opts);
   }
 };
 
@@ -126,15 +128,15 @@ konnakkol.TempoChunk = class TempoChunk extends konnakkol.ContainerChunk {
     this.speed = speed;
   }
 
-  play(opts={when:0, playTala:false}) {
-    super.play(opts);
+  play(when=0, opts={playTala:false}) {
+    super.play(when, opts);
 
     if (opts.playTala) {
       const numBeats = Math.ceil(this.getDuration() * this.speed);
       const beatDur = 1 / this.speed;
       const buffer = opts.soundLibrary.get('clap');
       for (let i = 0; i < numBeats; i++) {
-        const thalaWhen = opts.when + (i * beatDur);
+        const thalaWhen = when + (i * beatDur);
         audio.playSample(buffer, thalaWhen, 0.5);
       }
     }
@@ -153,16 +155,19 @@ konnakkol.Chunk = class Chunk extends konnakkol.GenericChunk {
   }
 };
 
-// TODO unnecessary? >_<
 konnakkol.Word = class Word extends konnakkol.Chunk {
   constructor(syllables, speed, gati) {
     super(syllables, speed, gati);
   }
 
-  playSubchunk(subchunk, opts, isLast) {
-    const onended = isLast ? opts.onended : undefined;
-    subchunk.play(opts.when, opts.speed, onended, opts.soundLibrary);
-    opts.when += subchunk.getDuration(this.speed) / opts.speed;
+  playSubchunk(subchunk, when, opts, isLast) {
+    const subOpts = {};
+    Object.keys(opts).forEach(key => {
+      if (key !== 'onended' || isLast) {
+        subOpts[key] = opts[key];
+      }
+    });
+    subchunk.play(when, subOpts);
   }
 };
 
@@ -183,16 +188,16 @@ konnakkol.Syllable = class Syllable {
     return (1 / this.gati) / speed;
   }
 
-  play(when=0, speed, onended, soundLibrary=konnakkol.soundLibraries.default) {
+  play(when=0, opts={soundLibrary:konnakkol.soundLibraries.default}) {
     this._isPlaying = true;
 
-    const buffer = soundLibrary.get(this.syllable.toLowerCase(), this.type);
+    const buffer = opts.soundLibrary.get(this.syllable.toLowerCase(), this.type);
     const mul = this.type === 'stress' ? 1.0 : 0.6;
 
     this.audioNode = audio.playSample(buffer, when, mul, () => {
       this._isPlaying = false;
-      if (onended !== undefined) {
-        onended();
+      if (opts.hasOwnProperty('onended')) {
+        opts.onended();
       }
     });
   }
@@ -217,7 +222,7 @@ konnakkol.Silence = class Silence extends konnakkol.Syllable {
     super(symbol, type);
   }
 
-  play(opts={when:0}) {
+  play() {
     // do nothing!
     return;
   }
@@ -313,8 +318,7 @@ konnakkol.play = function(input, when=0.2, onended, soundLibraryKey='default') {
   const composition = node.interpret();
   const soundLibrary = konnakkol.soundLibraries[soundLibraryKey];
   const playTala = true;
-  // debugger;
-  composition.play({when, soundLibrary, playTala, onended});
+  composition.play(0, {soundLibrary, playTala, onended});
   window.c = composition;
   return composition;
 };
