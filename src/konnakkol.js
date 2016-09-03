@@ -72,18 +72,17 @@ konnakkol.GenericChunk = class GenericChunk {
   }
 
   // this as separate method so that it can be overwritten by Word
-  playSubchunk(subchunk, when, opts, isLast) {
-    subchunk.play(when, opts);
+  playSubchunk(subchunk, when, speed, opts, isLast) {
+    subchunk.play(when, speed, opts);
   }
 
-  play(when=0, opts) {
-    opts.speed *= this.speed;
-
+  play(when=0, speed, opts) {
+    speed *= this.speed;
     let nextWhen = when;
     this.subchunks.forEach((sub, i) => {
       const isLast = i === this.subchunks.length - 1;
-      this.playSubchunk(sub, nextWhen, opts, isLast);
-      nextWhen += sub.getDuration(this.speed) / opts.speed;
+      this.playSubchunk(sub, nextWhen, speed, opts, isLast);
+      nextWhen += sub.getDuration(this.speed) / speed;
     });
   }
 
@@ -100,14 +99,14 @@ konnakkol.GenericChunk = class GenericChunk {
   }
 };
 
-konnakkol.ContainerChunk = class ContainerChunk extends konnakkol.GenericChunk {
-  play(when=0, opts={playTala:false}) {
-    opts.speed = 1;
-    super.play(when, opts);
-  }
-};
+// konnakkol.ContainerChunk = class ContainerChunk extends konnakkol.GenericChunk {
+//   play(when=0, speed, opts) {
+//     console.log("Container when, speed, opts:", when, speed, opts);
+//     super.play(when, speed, opts);
+//   }
+// };
 
-konnakkol.Composition = class Composition extends konnakkol.ContainerChunk {
+konnakkol.Composition = class Composition extends konnakkol.GenericChunk {
   constructor(tempoChunks, thala) {
     super(tempoChunks);
     this.thala = thala;
@@ -116,11 +115,12 @@ konnakkol.Composition = class Composition extends konnakkol.ContainerChunk {
 
   play(when=0, opts) {
     opts.playTala = this.thala !== undefined; // TODO temp! for when thala implemented
-    super.play(when, opts);
+    const speed = 1;
+    super.play(when, speed, opts);
   }
 };
 
-konnakkol.TempoChunk = class TempoChunk extends konnakkol.ContainerChunk {
+konnakkol.TempoChunk = class TempoChunk extends konnakkol.GenericChunk {
   constructor(tempo=60, chunks) {
     const speed = tempo / 60;
     super(chunks, speed);
@@ -128,8 +128,9 @@ konnakkol.TempoChunk = class TempoChunk extends konnakkol.ContainerChunk {
     this.speed = speed;
   }
 
-  play(when=0, opts={playTala:false}) {
-    super.play(when, opts);
+  play(when=0, speed, opts={playTala:false}) {
+
+    super.play(when, 1, opts);
 
     if (opts.playTala) {
       const numBeats = Math.ceil(this.getDuration() * this.speed);
@@ -160,14 +161,14 @@ konnakkol.Word = class Word extends konnakkol.Chunk {
     super(syllables, speed, gati);
   }
 
-  playSubchunk(subchunk, when, opts, isLast) {
+  playSubchunk(subchunk, when, speed, opts, isLast) {
     const subOpts = {};
     Object.keys(opts).forEach(key => {
       if (key !== 'onended' || isLast) {
         subOpts[key] = opts[key];
       }
     });
-    subchunk.play(when, subOpts);
+    subchunk.play(when, speed, subOpts);
   }
 };
 
@@ -184,11 +185,11 @@ konnakkol.Syllable = class Syllable {
     this.gati = gati;
   }
 
-  getDuration(speed) {
+  getDuration(speed=1) {
     return (1 / this.gati) / speed;
   }
 
-  play(when=0, opts={soundLibrary:konnakkol.soundLibraries.default}) {
+  play(when=0, speed, opts={soundLibrary:konnakkol.soundLibraries.default}) {
     this._isPlaying = true;
 
     const buffer = opts.soundLibrary.get(this.syllable.toLowerCase(), this.type);
@@ -286,7 +287,7 @@ konnakkol.semantics.addOperation('interpret', {
   ChunkHalf_base (startExp, chunksExp, endExp) {
     return new konnakkol.Chunk(chunksExp.interpret(), 0.5);
   },
-  Word (syllablesExp) {
+  word (syllablesExp) {
     return new konnakkol.Word(syllablesExp.interpret(), 1);
   },
   syllable_normal (consonantExp, vowelExp) {

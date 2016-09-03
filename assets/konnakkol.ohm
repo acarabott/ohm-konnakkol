@@ -14,7 +14,7 @@ Konnakkol {
 
   Repeat = ("*" | "x") digit+
 
-  Chunk = Gati? (ChunkDouble | ChunkHalf | (~Tempo Word))+ Repeat? --normal
+  Chunk = Gati? (ChunkDouble | ChunkHalf | (~Tempo word))+ Repeat? --normal
      | Gati? "(" Chunk+ ")" Repeat? --paren
 
   ChunkDouble =
@@ -25,7 +25,7 @@ Konnakkol {
        "[" ChunkHalf "]" --recur
      | "[" Chunk+ "]" --base
 
-  Word = syllable+
+  word = syllable+
 
   syllable =
       consonant      vowel  --normal
