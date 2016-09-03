@@ -312,7 +312,7 @@ konnakkol.play = function(input, when=0.2, onended, soundLibraryKey='default') {
   const composition = node.interpret();
   const soundLibrary = konnakkol.soundLibraries[soundLibraryKey];
   const playTala = true;
-  composition.play(0, {soundLibrary, playTala, onended});
+  composition.play(when, {soundLibrary, playTala, onended});
   window.c = composition;
   return composition;
 };
