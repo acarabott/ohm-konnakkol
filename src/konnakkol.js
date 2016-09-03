@@ -65,7 +65,7 @@ konnakkol.GenericChunk = class GenericChunk {
 
   getDuration(speed=1) {
     const sum = this.subchunks.reduce((prev, cur) => {
-      return prev + cur.getDuration(speed);
+      return prev + cur.getDuration(this.speed);
     }, 0);
 
     return sum / this.speed;
