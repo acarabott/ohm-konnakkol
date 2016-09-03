@@ -7,7 +7,6 @@
     this.container = document.createElement('div');
     this.container.id = id;
     this.container.classList.add('konnakkol-editor');
-
     // text area
     this.selectionStart = 0;
     this.selectionEnd = 0;
@@ -44,15 +43,14 @@
     this.controls = document.createElement('div');
     this.container.appendChild(this.controls);
 
+    this.playing = false;
     this.playButton = document.createElement('input');
     this.playButton.type = 'button';
     this.playButton.value = 'Play';
     this.playButton.classList.add('button');
-
-    this.playingTimeout;
-
     this.playButton.addEventListener('click', event => {
-      this.play();
+      this.playing ? this.stop() : this.play();
+      this.updateButton();
     });
 
     this.controls.appendChild(this.playButton);
@@ -85,16 +83,21 @@
   }
 
   play() {
-    const composition = konnakkol.play(this.getContent(), 0.2, () => {
-      console.log('composition done!');
+    this.playing = true;
+    this.composition = konnakkol.play(this.getContent(), 0.2, () => {
+      this.playing = false;
+      this.updateButton();
     });
-    // this.playingTimeout = setTimeout(() => {
-    //   this.stop();
-    // }, composition.getDuration() * 1000);
   }
 
   stop() {
-    clearTimeout(this.playingTimeout);
+    this.playing = false;
+    this.composition.stop();
+  }
+
+  updateButton() {
+    this.playButton.value = this.playing ? 'Stop' : 'Play';
+    this.playButton.classList[this.playing ? 'add' : 'remove']('playing');
   }
 
   getHTML() {
