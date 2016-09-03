@@ -109,6 +109,7 @@ konnakkol.Composition = class Composition extends konnakkol.ContainerChunk {
   constructor(tempoChunks, thala) {
     super(tempoChunks);
     this.thala = thala;
+    this.speed = 1;
   }
 
   play(opts={when:0}) {
