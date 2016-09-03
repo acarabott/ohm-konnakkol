@@ -286,7 +286,7 @@ konnakkol.semantics.addOperation('interpret', {
   ChunkHalf_base (startExp, chunksExp, endExp) {
     return new konnakkol.Chunk(chunksExp.interpret(), 0.5);
   },
-  word (syllablesExp) {
+  Word (syllablesExp) {
     return new konnakkol.Word(syllablesExp.interpret(), 1);
   },
   syllable_normal (consonantExp, vowelExp) {
