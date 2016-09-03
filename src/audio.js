@@ -46,10 +46,6 @@ audio.createSample = (buffer, mul=1, onended) => {
 
 
 audio.playSample = (buffer, when=0, mul=1, onended) => {
-  console.log("buffer:", buffer);
-  console.log("when:", when);
-  console.log("mul:", mul);
-  console.log("onended:", onended);
   const source = audio.createSample(buffer, mul, onended);
   source.start(audio.ctx.currentTime + when);
   return source;
