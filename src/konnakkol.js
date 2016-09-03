@@ -99,13 +99,6 @@ konnakkol.GenericChunk = class GenericChunk {
   }
 };
 
-// konnakkol.ContainerChunk = class ContainerChunk extends konnakkol.GenericChunk {
-//   play(when=0, speed, opts) {
-//     console.log("Container when, speed, opts:", when, speed, opts);
-//     super.play(when, speed, opts);
-//   }
-// };
-
 konnakkol.Composition = class Composition extends konnakkol.GenericChunk {
   constructor(tempoChunks, thala) {
     super(tempoChunks);
