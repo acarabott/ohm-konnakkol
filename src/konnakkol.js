@@ -121,6 +121,7 @@ konnakkol.TempoChunk = class TempoChunk extends konnakkol.GenericChunk {
     super(chunks, speed);
     this.tempo = tempo;
     this.speed = speed;
+    this.talaNodes = [];
   }
 
   play(when=0, speed, opts={playTala:false}) {
@@ -131,11 +132,14 @@ konnakkol.TempoChunk = class TempoChunk extends konnakkol.GenericChunk {
       const numBeats = Math.ceil(this.getDuration() * this.speed);
       const beatDur = 1 / this.speed;
       const buffer = opts.soundLibrary.get('clap');
-      for (let i = 0; i < numBeats; i++) {
-        const thalaWhen = when + (i * beatDur);
-        audio.playSample(buffer, thalaWhen, 0.5);
-      }
+      this.talaNodes = [...Array(numBeats).keys()]
+        .map(i => audio.playSample(buffer, when + (i * beatDur), 0.5));
     }
+  }
+
+  stop() {
+    super.stop();
+    this.talaNodes.forEach(s => s.stop());
   }
 };
 
