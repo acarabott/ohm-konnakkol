@@ -184,15 +184,16 @@
     </ol>`);
   keyCommand.editor.playButton.remove();
 
+  const selectionExample = `dhadhikinathom dhadhikinathom`;
   const selection = addExample(
     'selection',
-    `dhadhikinathom dhadhikinathom`,
+    selectionExample,
     'Selection playback',
     'You can play just a part of the text by selecting it'
   );
 
-  selection.editor.selectionStart = 12;
-  selection.editor.selectionEnd = 23;
+  selection.editor.selectionStart = selectionExample.indexOf(' ') + 1;
+  selection.editor.selectionEnd = selectionExample.length;
 
   addExample(
     'spaces',
