@@ -71,16 +71,13 @@ konnakkol.GenericChunk = class GenericChunk {
     return sum / this.speed;
   }
 
-  play(when=0, speed, soundLibrary, playTala, onended) {
-    let subchunkWhen = when;
+  play(opts={when:0}) {
+    let subchunkWhen = opts.when;
     this.subchunks.forEach((subchunk, i) => {
-      const isContainer = subchunk instanceof konnakkol.ContainerChunk;
-      const firstArg = isContainer ? soundLibrary : speed * this.speed;
-      const secondArg = isContainer ? playTala : soundLibrary;
-      const onended = i === this.subchunks.length - 1 ? onended : undefined;
-
-      subchunk.play(subchunkWhen, firstArg, secondArg, onended);
-      subchunkWhen += subchunk.getDuration(this.speed) / speed;
+      opts.speed *= this.speed;
+      opts.when = subchunkWhen;
+      subchunk.play(opts);
+      subchunkWhen += subchunk.getDuration(this.speed) / opts.speed;
     });
   }
 
@@ -98,8 +95,9 @@ konnakkol.GenericChunk = class GenericChunk {
 };
 
 konnakkol.ContainerChunk = class ContainerChunk extends konnakkol.GenericChunk {
-  play(when=0, soundLibrary, playTala=false, onended) {
-    super.play(when, 1, soundLibrary, playTala, onended);
+  play(opts={when:0, playTala:false}) {
+    opts.speed = 1;
+    super.play(opts);
   }
 };
 
@@ -109,9 +107,9 @@ konnakkol.Composition = class Composition extends konnakkol.ContainerChunk {
     this.thala = thala;
   }
 
-  play(when=0, soundLibrary, playTala, onended) {
-    playTala = this.thala !== undefined; // TODO temp! for when thala implemented
-    super.play(when, soundLibrary, playTala, onended);
+  play(opts={when:0}) {
+    opts.playTala = this.thala !== undefined; // TODO temp! for when thala implemented
+    super.play(opts);
   }
 };
 
@@ -123,15 +121,15 @@ konnakkol.TempoChunk = class TempoChunk extends konnakkol.ContainerChunk {
     this.speed = speed;
   }
 
-  play(when=0, soundLibrary, playTala=false, onended) {
-    super.play(when, soundLibrary, playTala, onended);
+  play(opts={when:0, playTala:false}) {
+    super.play(opts);
 
-    if (playTala) {
+    if (opts.playTala) {
       const numBeats = Math.ceil(this.getDuration() * this.speed);
       const beatDur = 1 / this.speed;
-      const buffer = soundLibrary.get('clap');
+      const buffer = opts.soundLibrary.get('clap');
       for (let i = 0; i < numBeats; i++) {
-        const thalaWhen = when + (i * beatDur);
+        const thalaWhen = opts.when + (i * beatDur);
         audio.playSample(buffer, thalaWhen, 0.5);
       }
     }
@@ -157,8 +155,8 @@ konnakkol.Word = class Word extends konnakkol.Chunk {
   }
 
   // TODO unnecessary?
-  play(when=0, speed, soundLibrary, playTala, onended) {
-    super.play(when, speed, soundLibrary, playTala, onended);
+  play(opts={when:0}) {
+    super.play(opts);
   }
 };
 
@@ -179,17 +177,16 @@ konnakkol.Syllable = class Syllable {
     return (1 / this.gati) / speed;
   }
 
-  play(when=0, speedCount, soundLibrary=konnakkol.soundLibraries.default, onended) {
+  play(opts={when:0, soundLibrary: konnakkol.soundLibraries.default}) {
     this._isPlaying = true;
 
-    const buffer = soundLibrary.get(this.syllable.toLowerCase(), this.type);
+    const buffer = opts.soundLibrary.get(this.syllable.toLowerCase(), this.type);
     const mul = this.type === 'stress' ? 1.0 : 0.6;
 
-    this.audioNode = audio.playSample(buffer, when, mul, () => {
+    this.audioNode = audio.playSample(buffer, opts.when, mul, () => {
       this._isPlaying = false;
-      console.log("onended:", onended);
-      if (onended !== undefined) {
-        onended();
+      if (opts.onended !== undefined) {
+        opts.onended();
       }
     });
   }
@@ -214,7 +211,7 @@ konnakkol.Silence = class Silence extends konnakkol.Syllable {
     super(symbol, type);
   }
 
-  play(when=0, speedCount, soundLibrary) {
+  play(opts={when:0}) {
     // do nothing!
     return;
   }
@@ -310,7 +307,8 @@ konnakkol.play = function(input, when=0.2, onended, soundLibraryKey='default') {
   const composition = node.interpret();
   const soundLibrary = konnakkol.soundLibraries[soundLibraryKey];
   const playTala = true;
-  composition.play(when, soundLibrary, playTala);
+  // debugger;
+  composition.play({when, soundLibrary, playTala, onended});
   window.c = composition;
   return composition;
 };
