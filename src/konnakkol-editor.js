@@ -29,7 +29,7 @@
       const goodMod = ['metaKey', 'ctrlKey'].some(k => event[k]);
       const goodKey = event.key === 'Enter' || event.code === 'Space';
       if (goodMod && goodKey) {
-        this.play();
+        this.togglePlaybackUpdateButton();
       }
     });
 
@@ -43,14 +43,13 @@
     this.controls = document.createElement('div');
     this.container.appendChild(this.controls);
 
-    this.playing = false;
+    this.isPlaying = false;
     this.playButton = document.createElement('input');
     this.playButton.type = 'button';
     this.playButton.value = 'Play';
     this.playButton.classList.add('button');
     this.playButton.addEventListener('click', event => {
-      this.playing ? this.stop() : this.play();
-      this.updateButton();
+      this.togglePlaybackUpdateButton();
     });
 
     this.controls.appendChild(this.playButton);
@@ -83,21 +82,30 @@
   }
 
   play() {
-    this.playing = true;
+    this.isPlaying = true;
     this.composition = konnakkol.play(this.getContent(), 0.2, () => {
-      this.playing = false;
+      this.isPlaying = false;
       this.updateButton();
     });
   }
 
   stop() {
-    this.playing = false;
+    this.isPlaying = false;
     this.composition.stop();
   }
 
+  togglePlayback() {
+    this.isPlaying ? this.stop() : this.play();
+  }
+
   updateButton() {
-    this.playButton.value = this.playing ? 'Stop' : 'Play';
-    this.playButton.classList[this.playing ? 'add' : 'remove']('playing');
+    this.playButton.value = this.isPlaying ? 'Stop' : 'Play';
+    this.playButton.classList[this.isPlaying ? 'add' : 'remove']('playing');
+  }
+
+  togglePlaybackUpdateButton() {
+    this.togglePlayback();
+    this.updateButton();
   }
 
   getHTML() {
