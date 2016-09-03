@@ -31,6 +31,8 @@
       if (goodMod && goodKey) {
         this.togglePlaybackUpdateButton();
       }
+
+      this.errorBox.style.visibility = 'hidden';
     });
 
     this.textarea.addEventListener('input', event => {
@@ -53,6 +55,12 @@
     });
 
     this.controls.appendChild(this.playButton);
+
+    this.errorBox = document.createElement('span');
+    this.errorBox.classList.add('errorBox');
+    this.errorBox.textContent = "There's a mistake in your konnakol!";
+    this.errorBox.style.visibility = 'hidden';
+    this.controls.appendChild(this.errorBox);
   }
 
   updateSelection() {
@@ -82,11 +90,16 @@
   }
 
   play() {
-    this.isPlaying = true;
-    this.composition = konnakkol.play(this.getContent(), 0.2, () => {
-      this.isPlaying = false;
-      this.updateButton();
-    });
+    try {
+      this.composition = konnakkol.play(this.getContent(), 0.2, () => {
+        this.isPlaying = false;
+        this.updateButton();
+      });
+      this.isPlaying = true;
+    } catch (e) {
+      console.log(e);
+      this.errorBox.style.visibility = 'visible';
+    }
   }
 
   stop() {
