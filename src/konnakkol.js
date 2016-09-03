@@ -186,7 +186,7 @@ konnakkol.Syllable = class Syllable {
     this._isPlaying = true;
 
     const buffer = opts.soundLibrary.get(this.syllable.toLowerCase(), this.type);
-    const mul = this.type === 'stress' ? 1.0 : 0.6;
+    const mul = this.type === 'stress' ? 1.0 : 0.4;
 
     this.audioNode = audio.playSample(buffer, when, mul, () => {
       this._isPlaying = false;
