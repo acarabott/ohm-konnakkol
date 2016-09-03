@@ -133,7 +133,7 @@ konnakkol.TempoChunk = class TempoChunk extends konnakkol.GenericChunk {
       const beatDur = 1 / this.speed;
       const buffer = opts.soundLibrary.get('clap');
       this.talaNodes = [...Array(numBeats).keys()]
-        .map(i => audio.playSample(buffer, when + (i * beatDur), 0.5));
+        .map(i => audio.playSample(buffer, when + (i * beatDur), 0.3));
     }
   }
 
