@@ -1,5 +1,9 @@
+
+konnakkol.editors = [];
+
  konnakkol.Editor = class Editor {
   constructor(id) {
+    konnakkol.editors.push(this);
     this.key = '/konnakkol';
 
     this.composition;
