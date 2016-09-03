@@ -71,17 +71,19 @@ konnakkol.GenericChunk = class GenericChunk {
     return sum / this.speed;
   }
 
-  // this as separate method so that it can be overwritten by Word
-  playSubchunk(subchunk, when, speed, opts, isLast) {
-    subchunk.play(when, speed, opts);
-  }
-
   play(when=0, speed, opts) {
     speed *= this.speed;
+
     let nextWhen = when;
     this.subchunks.forEach((sub, i) => {
+      const subOpts = {};
       const isLast = i === this.subchunks.length - 1;
-      this.playSubchunk(sub, nextWhen, speed, opts, isLast);
+      // we only want to call onended on the final syllable
+      // so we do recursively: the last subchunk of the last subchunk of the....
+      Object.keys(opts).filter(k => k !== 'onended' || isLast).forEach(k => {
+        subOpts[k] = opts[k];
+      });
+      sub.play(nextWhen, speed, subOpts);
       nextWhen += sub.getDuration(this.speed) / speed;
     });
   }
@@ -146,22 +148,6 @@ konnakkol.Chunk = class Chunk extends konnakkol.GenericChunk {
   setGati(gati) {
     this.gati = gati;
     this.subchunks.forEach(sub => sub.setGati(gati));
-  }
-};
-
-konnakkol.Word = class Word extends konnakkol.Chunk {
-  constructor(syllables, speed, gati) {
-    super(syllables, speed, gati);
-  }
-
-  playSubchunk(subchunk, when, speed, opts, isLast) {
-    const subOpts = {};
-    Object.keys(opts).forEach(key => {
-      if (key !== 'onended' || isLast) {
-        subOpts[key] = opts[key];
-      }
-    });
-    subchunk.play(when, speed, subOpts);
   }
 };
 
@@ -281,7 +267,7 @@ konnakkol.semantics.addOperation('interpret', {
     return new konnakkol.Chunk(chunksExp.interpret(), 0.5);
   },
   word (syllablesExp) {
-    return new konnakkol.Word(syllablesExp.interpret(), 1);
+    return new konnakkol.Chunk(syllablesExp.interpret(), 1);
   },
   syllable_normal (consonantExp, vowelExp) {
     const syllable = consonantExp.sourceString + vowelExp.sourceString;
