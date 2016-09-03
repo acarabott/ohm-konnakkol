@@ -40,4 +40,5 @@ function setup() {
 
 setup().then(success => {
   console.log('ready');
+  konnakkol.editors.forEach(e => e.enable());
 });

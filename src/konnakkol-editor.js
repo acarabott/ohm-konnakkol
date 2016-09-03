@@ -121,8 +121,22 @@ konnakkol.Editor = class Editor {
   }
 
   togglePlaybackUpdateButton() {
-    this.togglePlayback();
-    this.updateButton();
+    if (this.isEnabled()) {
+      this.togglePlayback();
+      this.updateButton();
+    }
+  }
+
+  enable() {
+    this.container.classList.remove('disabled');
+  }
+
+  disable() {
+    this.container.classList.add('disabled');
+  }
+
+  isEnabled() {
+    return !this.container.classList.contains('disabled');
   }
 
   getHTML() {
