@@ -183,7 +183,7 @@ konnakkol.Syllable = class Syllable {
   }
 
   stop() {
-    if (this.isPlaying) {
+    if (this.isPlaying()) {
       this.audioNode.stop();
     }
   }
