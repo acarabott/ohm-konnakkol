@@ -71,13 +71,17 @@ konnakkol.GenericChunk = class GenericChunk {
     return sum / this.speed;
   }
 
+  // this as separate method so that it can be overwritten by Word
+  playSubchunk(subchunk, opts, isLast) {
+    subchunk.play(opts);
+    opts.when += subchunk.getDuration(this.speed) / opts.speed;
+  }
+
   play(opts={when:0}) {
-    let subchunkWhen = opts.when;
-    this.subchunks.forEach((subchunk, i) => {
-      opts.speed *= this.speed;
-      opts.when = subchunkWhen;
-      subchunk.play(opts);
-      subchunkWhen += subchunk.getDuration(this.speed) / opts.speed;
+    opts.speed *= this.speed;
+    this.subchunks.forEach((sub, i) => {
+      const isLast = i === this.subchunks.length - 1;
+      this.playSubchunk(sub, opts, isLast);
     });
   }
 
@@ -154,9 +158,10 @@ konnakkol.Word = class Word extends konnakkol.Chunk {
     super(syllables, speed, gati);
   }
 
-  // TODO unnecessary?
-  play(opts={when:0}) {
-    super.play(opts);
+  playSubchunk(subchunk, opts, isLast) {
+    const onended = isLast ? opts.onended : undefined;
+    subchunk.play(opts.when, opts.speed, onended, opts.soundLibrary);
+    opts.when += subchunk.getDuration(this.speed) / opts.speed;
   }
 };
 
@@ -177,16 +182,16 @@ konnakkol.Syllable = class Syllable {
     return (1 / this.gati) / speed;
   }
 
-  play(opts={when:0, soundLibrary: konnakkol.soundLibraries.default}) {
+  play(when=0, speed, onended, soundLibrary=konnakkol.soundLibraries.default) {
     this._isPlaying = true;
 
-    const buffer = opts.soundLibrary.get(this.syllable.toLowerCase(), this.type);
+    const buffer = soundLibrary.get(this.syllable.toLowerCase(), this.type);
     const mul = this.type === 'stress' ? 1.0 : 0.6;
 
-    this.audioNode = audio.playSample(buffer, opts.when, mul, () => {
+    this.audioNode = audio.playSample(buffer, when, mul, () => {
       this._isPlaying = false;
-      if (opts.onended !== undefined) {
-        opts.onended();
+      if (onended !== undefined) {
+        onended();
       }
     });
   }
