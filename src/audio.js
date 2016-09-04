@@ -1,4 +1,10 @@
 const audio = {};
+
+audio.webkitFallback = window.AudioContext === undefined;
+window.AudioContext = audio.webkitFallback ?
+  window.webkitAudioContext :
+  window.AudioContext;
+
 audio.ctx = new AudioContext();
 
 audio.loadResource = (url, responseType="") => {
@@ -20,7 +26,24 @@ audio.loadResource = (url, responseType="") => {
   });
 };
 
+audio.loadAudioWebkitFallback = (url) => {
+  return audio.loadResource(url, 'arraybuffer').then(buffer => {
+    return new Promise((resolve, reject) => {
+      audio.ctx.decodeAudioData(buffer,
+        decodedBuffer => {
+          resolve(decodedBuffer);
+        },
+        error => reject(error)
+      );
+    });
+  });
+};
+
 audio.loadAudio = (url) => {
+  if (audio.webkitFallback) {
+    return audio.loadAudioWebkitFallback(url);
+  }
+
   return audio.loadResource(url, 'arraybuffer').then(buffer => {
     return audio.ctx.decodeAudioData(buffer,
       decodedBuffer => decodedBuffer,
