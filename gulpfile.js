@@ -70,7 +70,8 @@ gulp.task('web', ['babel'], function() {
         'scripts/audio.js',
         'scripts/konnakkol.js',
         'scripts/konnakkol-editor.js',
-        'scripts/app.js'
+        'scripts/app.js',
+        'scripts/examples.js'
       ]
     }))
     .pipe(gulp.dest(dst));
