@@ -67,7 +67,7 @@ function addExamples() {
   addExample(
     'spaces',
     `taka dimi taka janu
-  takita takita taka`,
+takita takita taka`,
     'Whitespace',
     'Spaces and new lines are ignored, so you can format as you like'
   );
@@ -75,9 +75,9 @@ function addExamples() {
   addExample(
     'syllables',
     `ma la da ta
-  khe khu khi kki
-  tam tom tham thom
-  tha lang - gu tom`,
+khe khu khi kki
+tam tom tham thom
+tha lang - gu tom`,
     'Syllables',
     `You can make up your own syllables!
      <ul>
@@ -91,9 +91,9 @@ function addExamples() {
   addExample(
     'tala',
     `tala
-  thadhimi thadhimi
-  thadhimi thadhimi
-  tom`,
+thadhimi thadhimi
+thadhimi thadhimi
+tom`,
     'Tala',
     `If you want to hear the pulse clapped, just type <span class="code">tala</span>
      at the start of the example`
@@ -102,12 +102,12 @@ function addExamples() {
   addExample(
     'rests',
     `tala
-  dha---dhi---ki---na---thom---
-  dha--dhi--ki--na--thom--
-  dha-dhi-ki-na-thom-
-  dhadhikinathom tom ,
-  dhadhikinathom tom ,
-  dhadhikinathom tom`,
+dha---dhi---ki---na---thom---
+dha--dhi--ki--na--thom--
+dha-dhi-ki-na-thom-
+dhadhikinathom tom ,
+dhadhikinathom tom ,
+dhadhikinathom tom`,
     'Rests/extensions',
     `You can extend a syllable by one akshara with <span class="code">-</span>
     or <span class="code">,</span>`
@@ -124,10 +124,10 @@ function addExamples() {
 
   addExample('stresses',
     `Ta ka ta ki Ta
-  ta ka ta Ki ta
-  ta ka Ta ki ta
-  ta Ka ta ki ta
-  Tham`,
+ta ka ta Ki ta
+ta ka Ta ki ta
+ta Ka ta ki ta
+Tham`,
     'Stresses',
     'Stresses can be added by capitalising the consonant of a syllable'
   );
@@ -153,7 +153,7 @@ function addExamples() {
 
   addExample('half-speed',
     `Takadimi [Takadimi]
-  [Takadimi [Taka]] Tham
+[Takadimi [Taka]] Tham
     `,
     'Half speed',
     `For half speed use <span class="code">[</span> and
@@ -162,19 +162,19 @@ function addExamples() {
 
   addExample('mixed',
     `[Ta , ka , Ta ki ta]
-  [Ta ka] Takita [Ta ka] Takita
-  {[Ta ka] Takita [Ta ka] Takita} Tham`,
+[Ta ka] Takita [Ta ka] Takita
+{[Ta ka] Takita [Ta ka] Takita} Tham`,
     'Mixed speed',
     'You can even mix double and half speed'
   );
 
   addExample('gati',
     `Takadimi Takajanu
-  g3 Takita Takita
-  g5 Dhadhikinathom Dhadhikinathom
-  g4 Kitathaka Kitathaka
-  g3 Kitathaka Kitathaka Kitathaka
-  Tom`,
+g3 Takita Takita
+g5 Dhadhikinathom Dhadhikinathom
+g4 Kitathaka Kitathaka
+g3 Kitathaka Kitathaka Kitathaka
+Tom`,
     'Gati',
     `The gati can be changed with <span class="code">gN</span> where
     <span class="code">N</span> is the number of aksharas per beat <br>
@@ -183,7 +183,7 @@ function addExamples() {
 
   addExample('tempo',
     `tempo 120 takadimi takadimi takadimi takadimi
-  kala 90 takadimi takadimi takadimi takadimi`,
+kala 90 takadimi takadimi takadimi takadimi`,
     'Tempo / Kala',
     `Set the tempo with either <span class="code">tempo N</span> or
     <span class="code">kala N</span>`
@@ -211,7 +211,7 @@ function addExamples() {
 
   addExample('homework',
     `((Takadimi x 7) TakaTakita) x 3
-  ((Takadimi x 6) TakaTakita) Tom`,
+((Takadimi x 6) TakaTakita) Tom`,
     '',
     `This makes it easy to write out exercises like this classic`
   );
