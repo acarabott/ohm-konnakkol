@@ -115,9 +115,9 @@ dhadhikinathom tom`,
 
   addExample('rests-2',
     `takadimi takajanu
-  takadimi takajanu
-  - dhadhikinathom dhadhikinathom dhadhikinathom
-  tom`,
+takadimi takajanu
+- dhadhikinathom dhadhikinathom dhadhikinathom
+tom`,
   '',
   'Rests can also go at the start of a phrase'
   );
