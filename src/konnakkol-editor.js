@@ -101,7 +101,9 @@ konnakkol.Editor = class Editor {
       });
       this.isPlaying = true;
     } catch (e) {
-      console.log(e);
+      // console.log(e);
+      // debugger;
+      // throw e; //TODO remove in production
       this.errorBox.style.visibility = 'visible';
     }
   }
