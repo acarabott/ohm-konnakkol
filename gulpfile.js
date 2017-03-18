@@ -58,8 +58,7 @@ gulp.task('chrome-watch', ['connect'], function() {
 });
 
 gulp.task('web', ['babel'], function() {
-  var dst = '/Volumes/Data/Users/arthurc/Sites/arthurcarabott.com/konnakkol';
-  // var dst = 'web';
+  var dst = '/Users/ac/sites/arthurcarabott.com/konnakkol';
 
   buildFactory(dst)();
 
