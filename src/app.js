@@ -1,5 +1,5 @@
 function setup() {
-  const audioPath = 'assets/audio/konnakkol-strokes/';
+  const audioPath = 'assets/audio/konnakkol-strokes-norm/';
   const audioFiles = {
     default: { normal: 'ta-3.mp3', stress: 'nam-3.mp3' },
     chap: { normal: 'chaapu-2.mp3', stress: 'chaapu2-9.mp3' },
