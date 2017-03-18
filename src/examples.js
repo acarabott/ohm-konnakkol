@@ -31,14 +31,14 @@ function addExample (id, content, title, instructionHTML) {
 function addExamples() {
   addExample(
     'basic-play',
-    'nakathadhimathadhimi',
+    'nakathadhimithadhimi',
     'Play button',
     'Syllables and phrases can be written and played with the play button'
   );
 
   const keyCommand = addExample(
     'key-command',
-    'nakathadhimathadhimi',
+    'nakathadhimithadhimi',
     'Keyboard shortcut',
     `You can also use a keyboard shortcut:
     <ol>
