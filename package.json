@@ -27,6 +27,6 @@
     "gulp-connect": "^5.0.0",
     "gulp-html-replace": "^1.6.1",
     "gulp-sourcemaps": "^2.4.1",
-    "ohm-js": "git+https://github.com/cdglabs/ohm.git"
+    "ohm-js": "git+https://github.com/harc/ohm.git"
   }
 }
