@@ -65,6 +65,9 @@ konnakkol.Editor = class Editor {
     this.errorBox.textContent = "There's a mistake in your konnakol!";
     this.errorBox.style.visibility = 'hidden';
     this.controls.appendChild(this.errorBox);
+
+    // TODO hardcoded default sound library
+    if (!konnakkol.soundLibraries.hasOwnProperty('default')) { this.disable(); }
   }
 
   updateSelection() {
@@ -94,14 +97,16 @@ konnakkol.Editor = class Editor {
   }
 
   play() {
+    if (!konnakkol.soundLibraries.hasOwnProperty('default')) { return; }
+
     try {
       this.composition = konnakkol.play(this.getContent(), 0.2, () => {
         this.isPlaying = false;
         this.updateButton();
-      });
+      }, 'default'); // TODO hardcoded default sound library
       this.isPlaying = true;
     } catch (e) {
-      // console.log(e);
+      console.log(e);
       // debugger;
       // throw e; //TODO remove in production
       this.errorBox.style.visibility = 'visible';

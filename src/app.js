@@ -19,8 +19,9 @@ function setup() {
     thom: { normal: 'thom-2.mp3', stress: 'thom2-4.mp3' },
     clap: { normal: 'clap.mp3' }
   };
-  const soundLibraryLookup = { default: {} };
-  const soundFilePromises = Object.keys(audioFiles).map(strokeKey => {
+  const soundLibraryLookup = { default: { } };
+  const soundFilePromises = [];
+  Object.keys(audioFiles).forEach(strokeKey => {
     soundLibraryLookup[strokeKey] = {};
     Object.keys(audioFiles[strokeKey]).forEach(typeKey => {
 
@@ -29,16 +30,29 @@ function setup() {
         soundLibraryLookup[strokeKey][typeKey] = buffer;
       });
       soundLibraryLookup[strokeKey][typeKey] = promise;
-
-      return promise;
+      soundFilePromises.push(promise);
     });
   });
+
 
   return Promise.all(soundFilePromises).then(() => {
     konnakkol.addSoundLibraryFromLookup('default', soundLibraryLookup);
   });
 }
 
-setup().then(success => {
-  konnakkol.editors.forEach(e => e.enable());
-});
+function main() {
+  setup().then(success => {
+    konnakkol.editors.forEach(e => e.enable());
+  });
+}
+
+function ready(fn) {
+  if (document.readyState !== 'loading'){
+    fn();
+  } else {
+    document.addEventListener('DOMContentLoaded', fn);
+  }
+}
+
+ready(main);
+

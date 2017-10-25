@@ -290,6 +290,9 @@ konnakkol.semantics.addOperation('interpret', {
 });
 
 konnakkol.play = function(input, when=0.2, onended, soundLibraryKey='default') {
+  const soundLibrary = konnakkol.soundLibraries[soundLibraryKey];
+  if (soundLibrary === undefined) { return; }
+
   const result = konnakkol.grammar.match(input);
   if (result.failed()) {
     throw Error(`Parsing failed, bad input!\n${result.message}`);
@@ -300,7 +303,7 @@ konnakkol.play = function(input, when=0.2, onended, soundLibraryKey='default') {
   }
   const node = konnakkol.semantics(result);
   const composition = node.interpret();
-  const soundLibrary = konnakkol.soundLibraries[soundLibraryKey];
+
   const playTala = true;
   composition.play(when, {soundLibrary, playTala, onended});
   window.c = composition;
