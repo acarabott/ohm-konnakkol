@@ -194,7 +194,7 @@ kala 90 takadimi takadimi takadimi takadimi`,
     'Repeats',
     `Phrases can be repeated by using <span class="code">x N</span> (spaces
     don't matter, <span class="code">x3</span> and <span class="code">x 3</span>
-    are both ok`
+    are both ok)`
   );
 
   addExample('repeats-parens',
